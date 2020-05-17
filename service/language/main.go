@@ -6,7 +6,7 @@ import (
 	"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/config"
-	"github.com/seidu626/audiobook/logger/log"
+	"github.com/seidu626/audiobook/shared/logger/log"
 
 	// "github.com/micro/go-micro/v2/service/grpc"
 	"github.com/seidu626/audiobook/service/language/handler"
