@@ -6,22 +6,21 @@ import (
 	"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/config"
-	"github.com/xmlking/logger/log"
+	"github.com/seidu626/logger/log"
 
 	// "github.com/micro/go-micro/v2/service/grpc"
-	"github.com/xmlking/micro-starter-kit/service/account/handler"
-	profilePB "github.com/xmlking/micro-starter-kit/service/account/proto/profile"
-	userPB "github.com/xmlking/micro-starter-kit/service/account/proto/user"
-	"github.com/xmlking/micro-starter-kit/service/account/registry"
-	"github.com/xmlking/micro-starter-kit/service/account/repository"
-	greeterPB "github.com/xmlking/micro-starter-kit/service/greeter/proto/greeter"
-	myConfig "github.com/xmlking/micro-starter-kit/shared/config"
-	"github.com/xmlking/micro-starter-kit/shared/constants"
-	"github.com/xmlking/micro-starter-kit/shared/logger"
-	"github.com/xmlking/micro-starter-kit/shared/util"
-	logWrapper "github.com/xmlking/micro-starter-kit/shared/wrapper/log"
-	transWrapper "github.com/xmlking/micro-starter-kit/shared/wrapper/transaction"
-	validatorWrapper "github.com/xmlking/micro-starter-kit/shared/wrapper/validator"
+	"github.com/seidu626/audiobook/service/language/handler"
+	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
+	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
+	"github.com/seidu626/audiobook/service/language/registry"
+	"github.com/seidu626/audiobook/service/language/repository"
+	myConfig "github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/shared/constants"
+	"github.com/seidu626/audiobook/shared/logger"
+	"github.com/seidu626/audiobook/shared/util"
+	logWrapper "github.com/seidu626/audiobook/shared/wrapper/log"
+	transWrapper "github.com/seidu626/audiobook/shared/wrapper/transaction"
+	validatorWrapper "github.com/seidu626/audiobook/shared/wrapper/validator"
 )
 
 const (
@@ -106,16 +105,14 @@ func main() {
 
 	// Publisher publish to "mkit.service.emailer"
 	publisher := micro.NewEvent(constants.EMAILER_SERVICE, service.Client())
-	// greeterSrv Client to call "mkit.service.greeter"
-	greeterSrvClient := greeterPB.NewGreeterService(constants.GREETER_SERVICE, service.Client())
 
 	// // Handlers
-	userHandler := handler.NewUserHandler(ctn.Resolve("user-repository").(repository.UserRepository), publisher, greeterSrvClient)
-	profileHandler := ctn.Resolve("profile-handler").(profilePB.ProfileServiceHandler)
+	languageHandler := handler.NewLanguageHandler(ctn.Resolve("language-repository").(repository.LanguageRepository), publisher)
+	skillHandler := ctn.Resolve("skill-handler").(skillPB.SkillServiceHandler)
 
 	// Register Handlers
-	userPB.RegisterUserServiceHandler(service.Server(), userHandler)
-	profilePB.RegisterProfileServiceHandler(service.Server(), profileHandler)
+	languagePB.RegisterLanguageServiceHandler(service.Server(), languageHandler)
+	skillPB.RegisterSkillServiceHandler(service.Server(), skillHandler)
 
 	myConfig.PrintBuildInfo()
 	// Run service

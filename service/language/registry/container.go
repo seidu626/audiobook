@@ -4,14 +4,12 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/sarulabs/di/v2"
 
-	"github.com/xmlking/logger/log"
-
-	"github.com/xmlking/micro-starter-kit/service/account/handler"
-	account_entities "github.com/xmlking/micro-starter-kit/service/account/proto/entities"
-	"github.com/xmlking/micro-starter-kit/service/account/repository"
-	"github.com/xmlking/micro-starter-kit/shared/config"
-	"github.com/xmlking/micro-starter-kit/shared/database"
-	"github.com/xmlking/micro-starter-kit/shared/logger"
+	"github.com/seidu626/audiobook/service/language/handler"
+	language_entities "github.com/seidu626/audiobook/service/language/proto/entities"
+	"github.com/seidu626/audiobook/service/language/repository"
+	"github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/shared/database"
+	log "github.com/sirupsen/logrus"
 )
 
 // Container - provide di Container
@@ -36,31 +34,34 @@ func NewContainer(cfg config.ServiceConfiguration) (*Container, error) {
 			},
 		},
 		{
-			Name:  "user-repository",
+			Name:  "language-repository",
 			Scope: di.App,
-			Build: buildUserRepository,
+			Build: buildLanguageRepository,
 		},
 		{
-			Name:  "profile-repository",
+			Name:  "skill-repository",
 			Scope: di.App,
-			Build: buildProfileRepository,
+			Build: buildSkillRepository,
 		},
 		{
-			Name:  "user-handler",
+			Name:  "word-repository",
 			Scope: di.App,
-			Build: buildUserHandler,
+			Build: buildWordRepository,
 		},
 		{
-			Name:  "profile-handler",
+			Name:  "language-handler",
 			Scope: di.App,
-			Build: func(ctn di.Container) (interface{}, error) {
-				repo := ctn.Get("profile-repository").(repository.ProfileRepository)
-
-				logger := logger.NewLoggerWithFields(cfg.Log, map[string]interface{}{
-					"component": "ProfileHandler",
-				})
-				return handler.NewProfileHandler(repo, logger), nil
-			},
+			Build: buildLanguageHandler,
+		},
+		{
+			Name:  "skill-handler",
+			Scope: di.App,
+			Build: buildSkillHandler,
+		},
+		{
+			Name:  "word-handler",
+			Scope: di.App,
+			Build: buildWordHandler,
 		},
 		{
 			Name:  "database",
@@ -96,19 +97,35 @@ func (c *Container) Delete() error {
 	return c.ctn.Delete()
 }
 
-func buildUserRepository(ctn di.Container) (interface{}, error) {
+func buildLanguageRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&account_entities.UserORM{})
-	return repository.NewUserRepository(db), nil
+	db.AutoMigrate(&language_entities.Language{})
+	return repository.NewLanguageRepository(db), nil
 }
 
-func buildProfileRepository(ctn di.Container) (interface{}, error) {
+func buildSkillRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&account_entities.ProfileORM{})
-	return repository.NewProfileRepository(db), nil
+	db.AutoMigrate(&language_entities.Skill{})
+	return repository.NewSkillRepository(db), nil
 }
 
-func buildUserHandler(ctn di.Container) (interface{}, error) {
-	repo := ctn.Get("user-repository").(repository.UserRepository)
-	return handler.NewUserHandler(repo, nil, nil), nil // FIXME inject Publisher, and greeter service
+func buildWordRepository(ctn di.Container) (interface{}, error) {
+	db := ctn.Get("database").(*gorm.DB)
+	db.AutoMigrate(&language_entities.Word{})
+	return repository.NewWordRepository(db), nil
+}
+
+func buildLanguageHandler(ctn di.Container) (interface{}, error) {
+	repo := ctn.Get("language-repository").(repository.LanguageRepository)
+	return handler.NewLanguageHandler(repo, nil), nil // FIXME inject Publisher, and greeter service
+}
+
+func buildSkillHandler(ctn di.Container) (interface{}, error) {
+	repo := ctn.Get("skill-repository").(repository.SkillRepository)
+	return handler.NewSkillHandler(repo, nil), nil // FIXME inject Publisher, and greeter service
+}
+
+func buildWordHandler(ctn di.Container) (interface{}, error) {
+	repo := ctn.Get("word-repository").(repository.WordRepository)
+	return handler.NewWordHandler(repo, nil), nil // FIXME inject Publisher, and greeter service
 }
