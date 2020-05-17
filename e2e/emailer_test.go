@@ -9,7 +9,7 @@ import (
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
 
-	emailerPB "github.com/xmlking/micro-starter-kit/service/emailer/proto/emailer"
+	emailerPB "github.com/seidu626/audiobook/service/emailer/proto/emailer"
 )
 
 var (

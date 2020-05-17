@@ -3,11 +3,11 @@ package database
 import (
 	"testing"
 
-	"github.com/xmlking/micro-starter-kit/shared/config"
+	"github.com/seidu626/audiobook/shared/config"
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
-	"github.com/xmlking/micro-starter-kit/shared/logger"
+	"github.com/seidu626/audiobook/shared/logger"
 )
 
 func TestDatabase(t *testing.T) {

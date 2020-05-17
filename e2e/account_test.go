@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	// "github.com/xmlking/micro-starter-kit/shared/micro/client/selector/static"
-	profilePB "github.com/xmlking/micro-starter-kit/service/account/proto/profile"
-	userPB "github.com/xmlking/micro-starter-kit/service/account/proto/user"
+	// "github.com/seidu626/audiobook/shared/micro/client/selector/static"
+	profilePB "github.com/seidu626/audiobook/service/account/proto/profile"
+	userPB "github.com/seidu626/audiobook/service/account/proto/user"
 )
 
 /**

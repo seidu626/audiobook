@@ -5,8 +5,8 @@ import (
 
 	"github.com/xmlking/logger/log"
 
-	"github.com/xmlking/micro-starter-kit/shared/config"
-	"github.com/xmlking/micro-starter-kit/shared/logger"
+	"github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/shared/logger"
 )
 
 func TestLogger(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"github.com/xmlking/logger/log"
 	"github.com/xmlking/logger/zerolog"
 
-	"github.com/xmlking/micro-starter-kit/shared/config"
+	"github.com/seidu626/audiobook/shared/config"
 )
 
 func InitLogger(logConf config.LogConfiguration) {

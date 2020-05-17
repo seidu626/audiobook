@@ -132,9 +132,9 @@ make docker-emailer-service
 make docker
 make docker DOCKER_REGISTRY=us.gcr.io
 make docker VERSION=v0.3.2 GO_MICRO_VERSION=v2.3.0
-make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=xmlking/micro-starter-kit
-make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=xmlking/micro-starter-kit VERSION=v0.2.9
-make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=xmlking/micro-starter-kit VERSION=v0.2.9 GO_MICRO_VERSION=v1.17.1
+make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=seidu626/audiobook
+make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=seidu626/audiobook VERSION=v0.2.9
+make docker DOCKER_REGISTRY=docker.pkg.github.com DOCKER_CONTEXT_PATH=seidu626/audiobook VERSION=v0.2.9 GO_MICRO_VERSION=v1.17.1
 
 # publish all microservices images
 make docker_push

@@ -5,7 +5,7 @@
 ```bash
 mkdir -p ~/Developer/Work/go/micro-starter-kit
 cd ~/Developer/Work/go/micro-starter-kit
-go mod init github.com/xmlking/micro-starter-kit
+go mod init github.com/seidu626/audiobook
 mkdir service api fnc
 
 # scaffold modules

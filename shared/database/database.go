@@ -5,11 +5,11 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"github.com/xmlking/micro-starter-kit/shared/config"
+	"github.com/seidu626/audiobook/shared/config"
 
 	"github.com/xmlking/logger/gormlog"
 
-	myLogger "github.com/xmlking/micro-starter-kit/shared/logger"
+	myLogger "github.com/seidu626/audiobook/shared/logger"
 )
 
 // GetDatabaseConnection return (gorm.DB or error)

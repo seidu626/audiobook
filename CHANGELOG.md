@@ -386,20 +386,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added steps when behind VPN
 
 
-[Unreleased]: https://github.com/xmlking/micro-starter-kit/compare/v0.3.1...HEAD
-[v0.3.1]: https://github.com/xmlking/micro-starter-kit/compare/v0.3.0...v0.3.1
-[v0.3.0]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.9...v0.3.0
-[v0.2.9]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.8...v0.2.9
-[v0.2.8]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.7...v0.2.8
-[v0.2.7]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.6...v0.2.7
-[v0.2.6]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.4...v0.2.6
-[v0.2.4]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.3...v0.2.4
-[v0.2.3]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.2...v0.2.3
-[v0.2.2]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.1...v0.2.2
-[v0.2.1]: https://github.com/xmlking/micro-starter-kit/compare/v0.2.0...v0.2.1
-[v0.2.0]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.5...v0.2.0
-[v0.1.5]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.4...v0.1.5
-[v0.1.4]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.3...v0.1.4
-[v0.1.3]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.2...v0.1.3
-[v0.1.2]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.1...v0.1.2
-[v0.1.1]: https://github.com/xmlking/micro-starter-kit/compare/v0.1.0...v0.1.1
+[Unreleased]: https://github.com/seidu626/audiobook/compare/v0.3.1...HEAD
+[v0.3.1]: https://github.com/seidu626/audiobook/compare/v0.3.0...v0.3.1
+[v0.3.0]: https://github.com/seidu626/audiobook/compare/v0.2.9...v0.3.0
+[v0.2.9]: https://github.com/seidu626/audiobook/compare/v0.2.8...v0.2.9
+[v0.2.8]: https://github.com/seidu626/audiobook/compare/v0.2.7...v0.2.8
+[v0.2.7]: https://github.com/seidu626/audiobook/compare/v0.2.6...v0.2.7
+[v0.2.6]: https://github.com/seidu626/audiobook/compare/v0.2.4...v0.2.6
+[v0.2.4]: https://github.com/seidu626/audiobook/compare/v0.2.3...v0.2.4
+[v0.2.3]: https://github.com/seidu626/audiobook/compare/v0.2.2...v0.2.3
+[v0.2.2]: https://github.com/seidu626/audiobook/compare/v0.2.1...v0.2.2
+[v0.2.1]: https://github.com/seidu626/audiobook/compare/v0.2.0...v0.2.1
+[v0.2.0]: https://github.com/seidu626/audiobook/compare/v0.1.5...v0.2.0
+[v0.1.5]: https://github.com/seidu626/audiobook/compare/v0.1.4...v0.1.5
+[v0.1.4]: https://github.com/seidu626/audiobook/compare/v0.1.3...v0.1.4
+[v0.1.3]: https://github.com/seidu626/audiobook/compare/v0.1.2...v0.1.3
+[v0.1.2]: https://github.com/seidu626/audiobook/compare/v0.1.1...v0.1.2
+[v0.1.1]: https://github.com/seidu626/audiobook/compare/v0.1.0...v0.1.1

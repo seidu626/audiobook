@@ -8,9 +8,9 @@ import (
 	"github.com/micro/go-micro/v2/client"
 	"github.com/stretchr/testify/assert"
 
-	// "github.com/xmlking/micro-starter-kit/shared/micro/client/selector/static"
-	greeterPB "github.com/xmlking/micro-starter-kit/service/greeter/proto/greeter"
-	"github.com/xmlking/micro-starter-kit/shared/constants"
+	// "github.com/seidu626/audiobook/shared/micro/client/selector/static"
+	greeterPB "github.com/seidu626/audiobook/service/greeter/proto/greeter"
+	"github.com/seidu626/audiobook/shared/constants"
 )
 
 var (

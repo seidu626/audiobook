@@ -1,6 +1,6 @@
 # Releasing
 
-[release page]: https://github.com/xmlking/micro-starter-kit/releases
+[release page]: https://github.com/seidu626/audiobook/releases
 [`cloud-build-local`]: https://github.com/GoogleCloudPlatform/cloud-build-local
 [google cloud build]: https://cloud.google.com/cloud-build
 [semver]: https://semver.org
@@ -57,7 +57,7 @@ Delete it upstream:
 
 ```
 # Disable push protection:
-git remote set-url --push upstream git@github.com/xmlking/micro-starter-kit.git
+git remote set-url --push upstream git@github.com/seidu626/audiobook.git
 
 # The empty space before the colon effectively means delete the tag.
 git push upstream :refs/tags/$version

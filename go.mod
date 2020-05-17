@@ -1,4 +1,4 @@
-module github.com/xmlking/micro-starter-kit
+module github.com/seidu626/audiobook
 
 go 1.14
 

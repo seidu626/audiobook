@@ -67,17 +67,17 @@ images:
   - name: postgres
     newTag: 11.5-alpine
   - name: micro/micro
-    newName: docker.pkg.github.com/xmlking/micro-starter-kit/micro
+    newName: docker.pkg.github.com/seidu626/audiobook/micro
     newTag: v2.0.0
   - name: xmlking/account-service
-    newName: docker.pkg.github.com/xmlking/micro-starter-kit/account-service
+    newName: docker.pkg.github.com/seidu626/audiobook/account-service
     newTag: $(IMAGE_VERSION)
   - name: xmlking/emailer-service
-    newName: docker.pkg.github.com/xmlking/micro-starter-kit/emailer-service
+    newName: docker.pkg.github.com/seidu626/audiobook/emailer-service
     newTag: $(IMAGE_VERSION)
   - name: xmlking/greeter-service
-    newName: docker.pkg.github.com/xmlking/micro-starter-kit/greeter-service
+    newName: docker.pkg.github.com/seidu626/audiobook/greeter-service
     newTag: $(IMAGE_VERSION)
   - name: xmlking/recorder-service
-    newName: docker.pkg.github.com/xmlking/micro-starter-kit/recorder-service
+    newName: docker.pkg.github.com/seidu626/audiobook/recorder-service
     newTag: $(IMAGE_VERSION)

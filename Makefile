@@ -103,7 +103,7 @@ update_deps:
 			echo ✓ compiled: $$f; \
 		done \
 	fi
-	# @rsync -a github.com/xmlking/micro-starter-kit/service/account/proto/ service/account/proto && rm -Rf github.com
+	# @rsync -a github.com/seidu626/audiobook/service/account/proto/ service/account/proto && rm -Rf github.com
 
 proto_lint:
 	@echo "Linting all protos"; \

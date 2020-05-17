@@ -6,9 +6,9 @@ import (
 	"github.com/micro/go-micro/v2/config"
 	"github.com/xmlking/logger/log"
 
-	myConfig "github.com/xmlking/micro-starter-kit/shared/config"
-	"github.com/xmlking/micro-starter-kit/shared/logger"
-	logWrapper "github.com/xmlking/micro-starter-kit/shared/wrapper/log"
+	myConfig "github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/shared/logger"
+	logWrapper "github.com/seidu626/audiobook/shared/wrapper/log"
 )
 
 const (
