@@ -93,6 +93,8 @@ func (m *Skill) Validate() error {
 
 	// no validation rules for Index
 
+	// no validation rules for LanguageId
+
 	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return SkillValidationError{
@@ -217,6 +219,8 @@ func (m *Word) Validate() error {
 	// no validation rules for Content
 
 	// no validation rules for AudioSrc
+
+	// no validation rules for LanguageId
 
 	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {

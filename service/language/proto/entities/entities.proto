@@ -27,8 +27,9 @@ message Skill {
   string url_title = 12;
   string category = 13;
   int32 index = 14;
-  Language language = 15;
-  repeated Word words = 16;
+  string language_id = 15;
+  Language language = 16;
+  repeated Word words = 17;
 }
 
 message Word {
@@ -38,7 +39,8 @@ message Word {
   google.protobuf.Timestamp deleted_at = 4;
   string content = 5;
   string audio_src = 6;
-  Language language = 7;
+  string language_id = 7;
+  Language language = 8;
 }
 
 // Language Entity

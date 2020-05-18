@@ -10,8 +10,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
-	language_models "github.com/seidu626/audiobook/service/language/models"
-	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
+	language_models "github.com/seidu626/audiobook/service/language/model"
+	wordPB "github.com/seidu626/audiobook/service/language/proto/word"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
 )
@@ -23,19 +23,18 @@ type wordHandler struct {
 }
 
 // NewWordHandler returns an instance of `WordServiceHandler`.
-func NewWordHandler(repo repository.WordRepository, eve micro.Event) languagePB.WordServiceHandler {
+func NewWordHandler(repo repository.WordRepository, eve micro.Event) wordPB.WordServiceHandler {
 	return &wordHandler{
 		wordRepository: repo,
 		Event:          eve,
 	}
 }
 
-func (h *wordHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
+func (h *wordHandler) Exist(ctx context.Context, req *wordPB.ExistRequest, rsp *wordPB.ExistResponse) error {
 	log.Info("Received WordHandler.Exist request")
 	model := language_models.Word{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue())
-	content := req.Content.GetValue()
-	model.Content = &content
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Content = req.Content.GetValue()
 
 	exists := h.wordRepository.Exist(&model)
 	log.Infof("word exists? %t", exists)
@@ -43,9 +42,8 @@ func (h *wordHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, r
 	return nil
 }
 
-func (h *wordHandler) List(ctx context.Context, req *languagePB.ListRequest, rsp *languagePB.ListResponse) error {
+func (h *wordHandler) List(ctx context.Context, req *wordPB.ListRequest, rsp *wordPB.ListResponse) error {
 	log.Info("Received WordHandler.List request")
-	model := language_models.Word{}
 	total, words, err := h.wordRepository.List(req.Limit.GetValue(), req.Page.GetValue(), req.Sort.GetValue())
 	if err != nil {
 		return errors.NotFound("micro.service.word.word.list", "Error %v", err.Error())
@@ -56,7 +54,7 @@ func (h *wordHandler) List(ctx context.Context, req *languagePB.ListRequest, rsp
 	return nil
 }
 
-func (h *wordHandler) Get(ctx context.Context, req *languagePB.GetRequest, rsp *languagePB.GetResponse) error {
+func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *wordPB.GetResponse) error {
 	log.Info("Received WordHandler.Get request")
 
 	id := req.Id.GetValue()
@@ -77,13 +75,13 @@ func (h *wordHandler) Get(ctx context.Context, req *languagePB.GetRequest, rsp *
 	return nil
 }
 
-func (h *wordHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
+func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp *wordPB.CreateResponse) error {
 	log.Info("Received WordHandler.Create request")
 
 	model := language_models.Word{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	model.LanguageID = req.LanguageId.GetValue()
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -92,7 +90,7 @@ func (h *wordHandler) Create(ctx context.Context, req *languagePB.CreateRequest,
 	return nil
 }
 
-func (h *wordHandler) Update(ctx context.Context, req *languagePB.UpdateRequest, rsp *languagePB.UpdateResponse) error {
+func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp *wordPB.UpdateResponse) error {
 	log.Info("Received WordHandler.Update request")
 	// Identify the word
 	acc, ok := auth.AccountFromContext(ctx)
@@ -107,10 +105,10 @@ func (h *wordHandler) Update(ctx context.Context, req *languagePB.UpdateRequest,
 	}
 
 	model := language_models.Word{}
-	model.Id = id
+	model.ID = id
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	model.LanguageID = req.LanguageId.GetValue()
 
 	if err := h.wordRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -119,7 +117,7 @@ func (h *wordHandler) Update(ctx context.Context, req *languagePB.UpdateRequest,
 	return nil
 }
 
-func (h *wordHandler) Delete(ctx context.Context, req *languagePB.DeleteRequest, rsp *languagePB.DeleteResponse) error {
+func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp *wordPB.DeleteResponse) error {
 	log.Info("Received WordHandler.Delete request")
 
 	id := req.Id.GetValue()
@@ -128,7 +126,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *languagePB.DeleteRequest,
 	}
 
 	model := language_models.Word{}
-	model.Id = uuid.FromStringOrNil(id)
+	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.wordRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

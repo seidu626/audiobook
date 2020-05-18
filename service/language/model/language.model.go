@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"time"
@@ -53,7 +53,7 @@ func UnmarshalLanguage(language *Language) *pb.Language {
 		Name:         language.Name,
 		Abbreviation: language.Abbreviation,
 		FlagSrc:      language.FlagSrc,
-		Words:        language.Words,
+		Words:        UnmarshalWordCollection(language.Words),
 	}
 }
 
@@ -70,6 +70,6 @@ func MarshalLanguage(language *pb.Language) *Language {
 		Name:         language.Name,
 		Abbreviation: language.Abbreviation,
 		FlagSrc:      language.FlagSrc,
-		Words:        language.Words,
+		Words:        MarshalWordCollection(language.Words),
 	}
 }

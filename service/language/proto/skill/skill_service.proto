@@ -55,7 +55,7 @@ message ListRequest {
   } ];
   google.protobuf.StringValue url_title = 5
       [ (validate.rules).string.min_len = 3 ];
-  google.protobuf.StringValue lesson_number = 6
+  int32 lesson_number = 6
       [ (validate.rules).string.min_len = 3 ];
 }
 
@@ -76,7 +76,7 @@ message GetRequest {
   } ];
   google.protobuf.StringValue url_title = 3
       [ (validate.rules).string.min_len = 3 ];
-  google.protobuf.StringValue lesson_number = 4
+  int32 lesson_number = 4
       [ (validate.rules).string.min_len = 3 ];
 }
 
@@ -95,7 +95,7 @@ message CreateRequest {
   } ];
   google.protobuf.StringValue url_title = 3
       [ (validate.rules).string.min_len = 3 ];
-  google.protobuf.StringValue lesson_number = 4
+  int32 lesson_number = 4
       [ (validate.rules).string.min_len = 3 ];
   repeated string dependencies = 5;
   bool disabled = 6;
@@ -125,7 +125,7 @@ message UpdateRequest {
   } ];
   google.protobuf.StringValue url_title = 3
       [ (validate.rules).string.min_len = 3 ];
-  google.protobuf.StringValue lesson_number = 4
+  int32 lesson_number = 4
       [ (validate.rules).string.min_len = 3 ];
   repeated string dependencies = 5;
   bool disabled = 6;

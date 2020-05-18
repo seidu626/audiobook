@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"time"
@@ -51,7 +51,7 @@ func UnmarshalWord(word *Word) *pb.Word {
 		DeletedAt:  deletedAt,
 		Content:    word.Content,
 		AudioSrc:   word.AudioSrc,
-		LanguageID: word.LanguageID,
+		LanguageId: word.LanguageID,
 	}
 }
 
@@ -67,6 +67,6 @@ func MarshalWord(word *pb.Word) *Word {
 		DeletedAt:  deletedAt,
 		Content:    word.Content,
 		AudioSrc:   word.AudioSrc,
-		LanguageID: word.LanguageID,
+		LanguageID: word.LanguageId,
 	}
 }

@@ -34,9 +34,9 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for UserService service
+// Client API for LanguageService service
 
-type UserService interface {
+type LanguageService interface {
 	Exist(ctx context.Context, in *ExistRequest, opts ...client.CallOption) (*ExistResponse, error)
 	List(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...client.CallOption) (*GetResponse, error)
@@ -45,20 +45,20 @@ type UserService interface {
 	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 }
 
-type userService struct {
+type languageService struct {
 	c    client.Client
 	name string
 }
 
-func NewUserService(name string, c client.Client) UserService {
-	return &userService{
+func NewLanguageService(name string, c client.Client) LanguageService {
+	return &languageService{
 		c:    c,
 		name: name,
 	}
 }
 
-func (c *userService) Exist(ctx context.Context, in *ExistRequest, opts ...client.CallOption) (*ExistResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.Exist", in)
+func (c *languageService) Exist(ctx context.Context, in *ExistRequest, opts ...client.CallOption) (*ExistResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.Exist", in)
 	out := new(ExistResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -67,8 +67,8 @@ func (c *userService) Exist(ctx context.Context, in *ExistRequest, opts ...clien
 	return out, nil
 }
 
-func (c *userService) List(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.List", in)
+func (c *languageService) List(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.List", in)
 	out := new(ListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -77,8 +77,8 @@ func (c *userService) List(ctx context.Context, in *ListRequest, opts ...client.
 	return out, nil
 }
 
-func (c *userService) Get(ctx context.Context, in *GetRequest, opts ...client.CallOption) (*GetResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.Get", in)
+func (c *languageService) Get(ctx context.Context, in *GetRequest, opts ...client.CallOption) (*GetResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.Get", in)
 	out := new(GetResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -87,8 +87,8 @@ func (c *userService) Get(ctx context.Context, in *GetRequest, opts ...client.Ca
 	return out, nil
 }
 
-func (c *userService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.Create", in)
+func (c *languageService) Create(ctx context.Context, in *CreateRequest, opts ...client.CallOption) (*CreateResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.Create", in)
 	out := new(CreateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -97,8 +97,8 @@ func (c *userService) Create(ctx context.Context, in *CreateRequest, opts ...cli
 	return out, nil
 }
 
-func (c *userService) Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.Update", in)
+func (c *languageService) Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.Update", in)
 	out := new(UpdateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -107,8 +107,8 @@ func (c *userService) Update(ctx context.Context, in *UpdateRequest, opts ...cli
 	return out, nil
 }
 
-func (c *userService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
-	req := c.c.NewRequest(c.name, "UserService.Delete", in)
+func (c *languageService) Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "LanguageService.Delete", in)
 	out := new(DeleteResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -117,9 +117,9 @@ func (c *userService) Delete(ctx context.Context, in *DeleteRequest, opts ...cli
 	return out, nil
 }
 
-// Server API for UserService service
+// Server API for LanguageService service
 
-type UserServiceHandler interface {
+type LanguageServiceHandler interface {
 	Exist(context.Context, *ExistRequest, *ExistResponse) error
 	List(context.Context, *ListRequest, *ListResponse) error
 	Get(context.Context, *GetRequest, *GetResponse) error
@@ -128,8 +128,8 @@ type UserServiceHandler interface {
 	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
 }
 
-func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
-	type userService interface {
+func RegisterLanguageServiceHandler(s server.Server, hdlr LanguageServiceHandler, opts ...server.HandlerOption) error {
+	type languageService interface {
 		Exist(ctx context.Context, in *ExistRequest, out *ExistResponse) error
 		List(ctx context.Context, in *ListRequest, out *ListResponse) error
 		Get(ctx context.Context, in *GetRequest, out *GetResponse) error
@@ -137,37 +137,37 @@ func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts .
 		Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
 		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
 	}
-	type UserService struct {
-		userService
+	type LanguageService struct {
+		languageService
 	}
-	h := &userServiceHandler{hdlr}
-	return s.Handle(s.NewHandler(&UserService{h}, opts...))
+	h := &languageServiceHandler{hdlr}
+	return s.Handle(s.NewHandler(&LanguageService{h}, opts...))
 }
 
-type userServiceHandler struct {
-	UserServiceHandler
+type languageServiceHandler struct {
+	LanguageServiceHandler
 }
 
-func (h *userServiceHandler) Exist(ctx context.Context, in *ExistRequest, out *ExistResponse) error {
-	return h.UserServiceHandler.Exist(ctx, in, out)
+func (h *languageServiceHandler) Exist(ctx context.Context, in *ExistRequest, out *ExistResponse) error {
+	return h.LanguageServiceHandler.Exist(ctx, in, out)
 }
 
-func (h *userServiceHandler) List(ctx context.Context, in *ListRequest, out *ListResponse) error {
-	return h.UserServiceHandler.List(ctx, in, out)
+func (h *languageServiceHandler) List(ctx context.Context, in *ListRequest, out *ListResponse) error {
+	return h.LanguageServiceHandler.List(ctx, in, out)
 }
 
-func (h *userServiceHandler) Get(ctx context.Context, in *GetRequest, out *GetResponse) error {
-	return h.UserServiceHandler.Get(ctx, in, out)
+func (h *languageServiceHandler) Get(ctx context.Context, in *GetRequest, out *GetResponse) error {
+	return h.LanguageServiceHandler.Get(ctx, in, out)
 }
 
-func (h *userServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
-	return h.UserServiceHandler.Create(ctx, in, out)
+func (h *languageServiceHandler) Create(ctx context.Context, in *CreateRequest, out *CreateResponse) error {
+	return h.LanguageServiceHandler.Create(ctx, in, out)
 }
 
-func (h *userServiceHandler) Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
-	return h.UserServiceHandler.Update(ctx, in, out)
+func (h *languageServiceHandler) Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
+	return h.LanguageServiceHandler.Update(ctx, in, out)
 }
 
-func (h *userServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
-	return h.UserServiceHandler.Delete(ctx, in, out)
+func (h *languageServiceHandler) Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+	return h.LanguageServiceHandler.Delete(ctx, in, out)
 }

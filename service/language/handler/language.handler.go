@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
-	language_models "github.com/seidu626/audiobook/service/language/models"
+	language_models "github.com/seidu626/audiobook/service/language/model"
 	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
@@ -33,9 +33,8 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
 	log.Info("Received LanguageHandler.Exist request")
 	model := language_models.Language{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue())
-	name := req.Name.GetValue()
-	model.Name = &name
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 
 	exists := h.languageRepository.Exist(&model)
@@ -82,8 +81,7 @@ func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequ
 	log.Info("Received LanguageHandler.Create request")
 
 	model := language_models.Language{}
-	name := req.Name.GetValue()
-	model.Name = &name
+	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
 
@@ -109,9 +107,8 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 	}
 
 	model := language_models.Language{}
-	name := req.Name.GetValue()
-	model.Id = id
-	model.Name = &name
+	model.ID = id
+	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
 
@@ -131,7 +128,7 @@ func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequ
 	}
 
 	model := language_models.Language{}
-	model.Id = uuid.FromStringOrNil(id)
+	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.languageRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

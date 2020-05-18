@@ -1,10 +1,9 @@
-package models
+package model
 
 import (
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/wrappers"
 	pb "github.com/seidu626/audiobook/service/language/proto/entities"
 )
 
@@ -15,9 +14,9 @@ type Skill struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 	DeletedAt    time.Time `json:"deleted_at"`
 	Title        string    `json:"title"`
-	URLTitle     int32     `json:"url_title"`
+	URLTitle     string    `json:"url_title"`
 	LessonNumber int32     `json:"lesson_number"`
-	Dependencies []*string `json:"dependencies"`
+	Dependencies []string  `json:"dependencies"`
 	Disabled     bool      `json:"disabled"`
 	Locked       bool      `json:"locked"`
 	Type         string    `json:"type"`
@@ -54,7 +53,7 @@ func UnmarshalSkill(skill *Skill) *pb.Skill {
 	createdAt, _ := ptypes.TimestampProto(skill.CreatedAt)
 	updatedAt, _ := ptypes.TimestampProto(skill.UpdatedAt)
 	deletedAt, _ := ptypes.TimestampProto(skill.DeletedAt)
-	languageID := &wrappers.StringValue{Value: skill.LanguageID} //https://iximiuz.com/en/posts/truly-optional-scalar-types-in-protobuf3/
+	//languageID := &wrappers.StringValue{Value: skill.LanguageID} //https://iximiuz.com/en/posts/truly-optional-scalar-types-in-protobuf3/
 	return &pb.Skill{
 		Id:           skill.ID,
 		CreatedAt:    createdAt,
@@ -70,7 +69,7 @@ func UnmarshalSkill(skill *Skill) *pb.Skill {
 		Category:     skill.Category,
 		Index:        skill.Index,
 		Description:  skill.Description,
-		LanguageId:   languageID,
+		LanguageId:   skill.LanguageID,
 	}
 }
 
@@ -95,6 +94,6 @@ func MarshalSkill(skill *pb.Skill) *Skill {
 		Category:     skill.Category,
 		Index:        skill.Index,
 		Description:  skill.Description,
-		LanguageID:   skill.LanguageId.String(),
+		LanguageID:   skill.LanguageId,
 	}
 }

@@ -8,8 +8,8 @@ import (
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
-	language_models "github.com/seidu626/audiobook/service/language/models"
-	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
+	language_models "github.com/seidu626/audiobook/service/language/model"
+	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
 	log "github.com/sirupsen/logrus"
@@ -22,19 +22,18 @@ type skillHandler struct {
 }
 
 // NewSkillHandler returns an instance of `SkillServiceHandler`.
-func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) languagePB.SkillServiceHandler {
+func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) skillPB.SkillServiceHandler {
 	return &skillHandler{
 		skillRepository: repo,
 		Event:           eve,
 	}
 }
 
-func (h *skillHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
+func (h *skillHandler) Exist(ctx context.Context, req *skillPB.ExistRequest, rsp *skillPB.ExistResponse) error {
 	log.Info("Received SkillHandler.Exist request")
 	model := language_models.Skill{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue())
-	title := req.Title.GetValue()
-	model.Title = &title
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Title = req.Title.GetValue()
 
 	exists := h.skillRepository.Exist(&model)
 	log.Infof("skill exists? %t", exists)
@@ -42,9 +41,8 @@ func (h *skillHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, 
 	return nil
 }
 
-func (h *skillHandler) List(ctx context.Context, req *languagePB.ListRequest, rsp *languagePB.ListResponse) error {
+func (h *skillHandler) List(ctx context.Context, req *skillPB.ListRequest, rsp *skillPB.ListResponse) error {
 	log.Info("Received SkillHandler.List request")
-	model := language_models.Skill{}
 	total, skills, err := h.skillRepository.List(req.Limit.GetValue(), req.Page.GetValue(), req.Sort.GetValue())
 	if err != nil {
 		return errors.NotFound("micro.service.skill.skill.list", "Error %v", err.Error())
@@ -55,7 +53,7 @@ func (h *skillHandler) List(ctx context.Context, req *languagePB.ListRequest, rs
 	return nil
 }
 
-func (h *skillHandler) Get(ctx context.Context, req *languagePB.GetRequest, rsp *languagePB.GetResponse) error {
+func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *skillPB.GetResponse) error {
 	log.Info("Received SkillHandler.Get request")
 
 	id := req.Id.GetValue()
@@ -76,21 +74,21 @@ func (h *skillHandler) Get(ctx context.Context, req *languagePB.GetRequest, rsp 
 	return nil
 }
 
-func (h *skillHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
+func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, rsp *skillPB.CreateResponse) error {
 	log.Info("Received SkillHandler.Create request")
 
 	model := language_models.Skill{}
 	model.Title = req.Title.GetValue()
-	model.UrlTitle = req.UrlTitle.GetValue()
-	model.LessonNumber = req.LessonNumber.GetValue()
-	model.Dependencies = req.Dependencies.GetValue()
-	model.Disabled = req.Disabled.GetValue()
-	model.Locked = req.Locked.GetValue()
-	model.Type = req.Type.GetValue()
-	model.Category = req.Category.GetValue()
-	model.Index = req.Index.GetValue()
-	model.Description = req.Description.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	model.URLTitle = req.UrlTitle.GetValue()
+	model.LessonNumber = req.LessonNumber
+	model.Dependencies = req.Dependencies
+	model.Disabled = req.Disabled
+	model.Locked = req.Locked
+	model.Type = req.Type
+	model.Category = req.Category
+	model.Index = int32(req.Index)
+	model.Description = req.Description
+	model.LanguageID = req.LanguageId.GetValue()
 
 	if err := h.skillRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -99,7 +97,7 @@ func (h *skillHandler) Create(ctx context.Context, req *languagePB.CreateRequest
 	return nil
 }
 
-func (h *skillHandler) Update(ctx context.Context, req *languagePB.UpdateRequest, rsp *languagePB.UpdateResponse) error {
+func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, rsp *skillPB.UpdateResponse) error {
 	log.Info("Received SkillHandler.Update request")
 	// Identify the skill
 	acc, ok := auth.AccountFromContext(ctx)
@@ -114,18 +112,18 @@ func (h *skillHandler) Update(ctx context.Context, req *languagePB.UpdateRequest
 	}
 
 	model := language_models.Skill{}
-	model.Id = id
+	model.ID = id
 	model.Title = req.Title.GetValue()
-	model.UrlTitle = req.UrlTitle.GetValue()
-	model.LessonNumber = req.LessonNumber.GetValue()
-	model.Dependencies = req.Dependencies.GetValue()
-	model.Disabled = req.Disabled.GetValue()
-	model.Locked = req.Locked.GetValue()
-	model.Type = req.Type.GetValue()
-	model.Category = req.Category.GetValue()
-	model.Index = req.Index.GetValue()
-	model.Description = req.Description.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	model.URLTitle = req.UrlTitle.GetValue()
+	model.LessonNumber = req.LessonNumber
+	model.Dependencies = req.Dependencies
+	model.Disabled = req.Disabled
+	model.Locked = req.Locked
+	model.Type = req.Type
+	model.Category = req.Category
+	model.Index = int32(req.Index)
+	model.Description = req.Description
+	model.LanguageID = req.LanguageId.GetValue()
 
 	if err := h.skillRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -134,7 +132,7 @@ func (h *skillHandler) Update(ctx context.Context, req *languagePB.UpdateRequest
 	return nil
 }
 
-func (h *skillHandler) Delete(ctx context.Context, req *languagePB.DeleteRequest, rsp *languagePB.DeleteResponse) error {
+func (h *skillHandler) Delete(ctx context.Context, req *skillPB.DeleteRequest, rsp *skillPB.DeleteResponse) error {
 	log.Info("Received SkillHandler.Delete request")
 
 	id := req.Id.GetValue()
@@ -143,7 +141,7 @@ func (h *skillHandler) Delete(ctx context.Context, req *languagePB.DeleteRequest
 	}
 
 	model := language_models.Skill{}
-	model.Id = uuid.FromStringOrNil(id)
+	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.skillRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
