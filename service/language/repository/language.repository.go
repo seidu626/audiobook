@@ -47,8 +47,8 @@ func (repo *languageRepository) Exist(model *models.Language) bool {
 			return true
 		}
 	}
-	if model.Code != "" {
-		repo.db.Model(&models.Language{}).Where("code = ?", model.Code).Count(&count)
+	if model.Abbreviation != "" {
+		repo.db.Model(&models.Language{}).Where("code = ?", model.Abbreviation).Count(&count)
 		if count > 0 {
 			return true
 		}

@@ -35,8 +35,8 @@ func NewSkillRepository(db *gorm.DB) SkillRepository {
 func (repo *skillRepository) Exist(model *models.Skill) bool {
 	log.Infof("Received skillRepository.Exist request %v", *model)
 	var count int
-	if model.Name != "" && len(model.Name) > 0 {
-		repo.db.Model(&models.Skill{}).Where("name = ?", model.Name).Count(&count)
+	if model.Title != "" && len(model.Title) > 0 {
+		repo.db.Model(&models.Skill{}).Where("name = ?", model.Title).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -47,8 +47,8 @@ func (repo *skillRepository) Exist(model *models.Skill) bool {
 			return true
 		}
 	}
-	if model.Code != "" {
-		repo.db.Model(&models.Skill{}).Where("code = ?", model.Code).Count(&count)
+	if model.URLTitle != "" {
+		repo.db.Model(&models.Skill{}).Where("code = ?", model.URLTitle).Count(&count)
 		if count > 0 {
 			return true
 		}

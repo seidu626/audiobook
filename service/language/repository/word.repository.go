@@ -35,20 +35,14 @@ func NewWordRepository(db *gorm.DB) WordRepository {
 func (repo *wordRepository) Exist(model *models.Word) bool {
 	log.Infof("Received wordRepository.Exist request %v", *model)
 	var count int
-	if model.Name != "" && len(model.Name) > 0 {
-		repo.db.Model(&models.Word{}).Where("name = ?", model.Name).Count(&count)
+	if model.Content != "" && len(model.Content) > 0 {
+		repo.db.Model(&models.Word{}).Where("name = ?", model.Content).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
 	if len(model.ID) > 0 {
 		repo.db.Model(&models.Word{}).Where("id = ?", model.ID).Count(&count)
-		if count > 0 {
-			return true
-		}
-	}
-	if model.Code != "" {
-		repo.db.Model(&models.Word{}).Where("code = ?", model.Code).Count(&count)
 		if count > 0 {
 			return true
 		}

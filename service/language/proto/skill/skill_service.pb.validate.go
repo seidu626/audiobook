@@ -283,16 +283,7 @@ func (m *ListRequest) Validate() error {
 
 	}
 
-	if wrapper := m.GetLessonNumber(); wrapper != nil {
-
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
-			return ListRequestValidationError{
-				field:  "LessonNumber",
-				reason: "value length must be at least 3 runes",
-			}
-		}
-
-	}
+	// no validation rules for LessonNumber
 
 	return nil
 }
@@ -467,16 +458,7 @@ func (m *GetRequest) Validate() error {
 
 	}
 
-	if wrapper := m.GetLessonNumber(); wrapper != nil {
-
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
-			return GetRequestValidationError{
-				field:  "LessonNumber",
-				reason: "value length must be at least 3 runes",
-			}
-		}
-
-	}
+	// no validation rules for LessonNumber
 
 	return nil
 }
@@ -648,16 +630,7 @@ func (m *CreateRequest) Validate() error {
 
 	}
 
-	if wrapper := m.GetLessonNumber(); wrapper != nil {
-
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
-			return CreateRequestValidationError{
-				field:  "LessonNumber",
-				reason: "value length must be at least 3 runes",
-			}
-		}
-
-	}
+	// no validation rules for LessonNumber
 
 	// no validation rules for Disabled
 
@@ -880,16 +853,7 @@ func (m *UpdateRequest) Validate() error {
 
 	}
 
-	if wrapper := m.GetLessonNumber(); wrapper != nil {
-
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
-			return UpdateRequestValidationError{
-				field:  "LessonNumber",
-				reason: "value length must be at least 3 runes",
-			}
-		}
-
-	}
+	// no validation rules for LessonNumber
 
 	// no validation rules for Disabled
 
