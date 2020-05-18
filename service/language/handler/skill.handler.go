@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
@@ -81,7 +82,7 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 	model.Title = req.Title.GetValue()
 	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = req.Dependencies
+	model.Dependencies = strings.Join(req.Dependencies, ",")
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
 	model.Type = req.Type
@@ -116,7 +117,7 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	model.Title = req.Title.GetValue()
 	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = req.Dependencies
+	model.Dependencies = strings.Join(req.Dependencies, ",")
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
 	model.Type = req.Type

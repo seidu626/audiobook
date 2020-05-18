@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	serviceName = constants.ACCOUNT_SERVICE
+	serviceName = constants.LANGUAGE_SERVICE
 	configDir   = "/config"
 	configFile  = "config.yaml"
 )

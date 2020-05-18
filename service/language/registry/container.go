@@ -5,7 +5,7 @@ import (
 	"github.com/sarulabs/di/v2"
 
 	"github.com/seidu626/audiobook/service/language/handler"
-	language_entities "github.com/seidu626/audiobook/service/language/proto/entities"
+	language_models "github.com/seidu626/audiobook/service/language/model"
 	"github.com/seidu626/audiobook/service/language/repository"
 	"github.com/seidu626/audiobook/shared/config"
 	"github.com/seidu626/audiobook/shared/database"
@@ -99,19 +99,19 @@ func (c *Container) Delete() error {
 
 func buildLanguageRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&language_entities.Language{})
+	db.AutoMigrate(&language_models.Language{})
 	return repository.NewLanguageRepository(db), nil
 }
 
 func buildSkillRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&language_entities.Skill{})
+	db.AutoMigrate(&language_models.Skill{})
 	return repository.NewSkillRepository(db), nil
 }
 
 func buildWordRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&language_entities.Word{})
+	db.AutoMigrate(&language_models.Word{})
 	return repository.NewWordRepository(db), nil
 }
 

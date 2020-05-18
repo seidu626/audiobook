@@ -34,6 +34,8 @@ func (s *TransactionSubscriber) Handle(ctx context.Context, event *transactionPB
 		return errors.New("TransactionSubscriber: missing  TranID")
 	}
 	switch from := md["Micro-From-Service"]; from {
+	case constants.LANGUAGE_SERVICE:
+		err = s.repo.Write(ctx, fmt.Sprintf("%s#%s", tranId, from), event)
 	case constants.ACCOUNT_SERVICE:
 		err = s.repo.Write(ctx, fmt.Sprintf("%s#%s", tranId, from), event)
 	case constants.EMAILER_SERVICE:

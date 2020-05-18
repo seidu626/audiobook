@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
@@ -16,7 +17,7 @@ type Skill struct {
 	Title        string    `json:"title"`
 	URLTitle     string    `json:"url_title"`
 	LessonNumber int32     `json:"lesson_number"`
-	Dependencies []string  `json:"dependencies"`
+	Dependencies string    `json:"dependencies"`
 	Disabled     bool      `json:"disabled"`
 	Locked       bool      `json:"locked"`
 	Type         string    `json:"type"`
@@ -62,7 +63,7 @@ func UnmarshalSkill(skill *Skill) *pb.Skill {
 		Title:        skill.Title,
 		UrlTitle:     skill.URLTitle,
 		LessonNumber: skill.LessonNumber,
-		Dependencies: skill.Dependencies,
+		Dependencies: strings.Split(skill.Dependencies, ","),
 		Disabled:     skill.Disabled,
 		Locked:       skill.Locked,
 		Type:         skill.Type,
@@ -87,7 +88,7 @@ func MarshalSkill(skill *pb.Skill) *Skill {
 		Title:        skill.Title,
 		URLTitle:     skill.UrlTitle,
 		LessonNumber: skill.LessonNumber,
-		Dependencies: skill.Dependencies,
+		Dependencies: strings.Join(skill.Dependencies, ","),
 		Disabled:     skill.Disabled,
 		Locked:       skill.Locked,
 		Type:         skill.Type,

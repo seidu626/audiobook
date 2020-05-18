@@ -65,20 +65,6 @@ func (m *ExistRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return ExistRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_ExistRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return ExistRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	if v, ok := interface{}(m.GetAbbreviation()).(interface{ Validate() error }); ok {
@@ -155,8 +141,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ExistRequestValidationError{}
-
-var _ExistRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for ExistResponse. This method will always return nil.
 func (m *ExistResponse) Validate() error {
@@ -266,28 +250,14 @@ func (m *ListRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return ListRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_ListRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return ListRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	if wrapper := m.GetAbbreviation(); wrapper != nil {
 
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 2 {
 			return ListRequestValidationError{
 				field:  "Abbreviation",
-				reason: "value length must be at least 3 runes",
+				reason: "value length must be at least 2 runes",
 			}
 		}
 
@@ -360,8 +330,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListRequestValidationError{}
-
-var _ListRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for ListResponse. This method will always return nil.
 func (m *ListResponse) Validate() error {
@@ -450,28 +418,14 @@ func (m *GetRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return GetRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_GetRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return GetRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	if wrapper := m.GetAbbreviation(); wrapper != nil {
 
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 2 {
 			return GetRequestValidationError{
 				field:  "Abbreviation",
-				reason: "value length must be at least 3 runes",
+				reason: "value length must be at least 2 runes",
 			}
 		}
 
@@ -553,8 +507,6 @@ var _ interface {
 	ErrorName() string
 } = GetRequestValidationError{}
 
-var _GetRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
-
 // Validate is disabled for GetResponse. This method will always return nil.
 func (m *GetResponse) Validate() error {
 	return nil
@@ -631,28 +583,14 @@ func (m *CreateRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return CreateRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_CreateRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return CreateRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	if wrapper := m.GetAbbreviation(); wrapper != nil {
 
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 2 {
 			return CreateRequestValidationError{
 				field:  "Abbreviation",
-				reason: "value length must be at least 3 runes",
+				reason: "value length must be at least 2 runes",
 			}
 		}
 
@@ -725,8 +663,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateRequestValidationError{}
-
-var _CreateRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for CreateResponse. This method will always return nil.
 func (m *CreateResponse) Validate() error {
@@ -816,28 +752,14 @@ func (m *UpdateRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return UpdateRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_UpdateRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return UpdateRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	if wrapper := m.GetAbbreviation(); wrapper != nil {
 
-		if utf8.RuneCountInString(wrapper.GetValue()) < 3 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 2 {
 			return UpdateRequestValidationError{
 				field:  "Abbreviation",
-				reason: "value length must be at least 3 runes",
+				reason: "value length must be at least 2 runes",
 			}
 		}
 
@@ -918,8 +840,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateRequestValidationError{}
-
-var _UpdateRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for UpdateResponse. This method will always return nil.
 func (m *UpdateResponse) Validate() error {
@@ -1009,20 +929,6 @@ func (m *DeleteRequest) Validate() error {
 			}
 		}
 
-		if len(wrapper.GetValue()) > 256 {
-			return DeleteRequestValidationError{
-				field:  "Name",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_DeleteRequest_Name_Pattern.MatchString(wrapper.GetValue()) {
-			return DeleteRequestValidationError{
-				field:  "Name",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
-			}
-		}
-
 	}
 
 	return nil
@@ -1089,8 +995,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteRequestValidationError{}
-
-var _DeleteRequest_Name_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for DeleteResponse. This method will always return nil.
 func (m *DeleteResponse) Validate() error {

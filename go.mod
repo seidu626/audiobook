@@ -7,7 +7,7 @@ go 1.14
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.3.0
-	github.com/golang/protobuf v1.4.1
+	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.1
 	github.com/iancoleman/strcase v0.0.0-20191112232945-16388991a334 // indirect
 	github.com/infobloxopen/atlas-app-toolkit v0.21.0
@@ -29,4 +29,5 @@ require (
 	github.com/xmlking/logger/gormlog v0.1.5
 	github.com/xmlking/logger/zerolog v0.1.5
 	google.golang.org/genproto v0.0.0-20191216164720-4f79533eabd1
+	google.golang.org/protobuf v1.23.0
 )
