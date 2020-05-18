@@ -48,7 +48,7 @@ func (repo *languageRepository) Exist(model *models.Language) bool {
 		}
 	}
 	if model.Abbreviation != "" {
-		repo.db.Model(&models.Language{}).Where("code = ?", model.Abbreviation).Count(&count)
+		repo.db.Model(&models.Language{}).Where("abbreviation = ?", model.Abbreviation).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -78,6 +78,7 @@ func (repo *languageRepository) List(limit, page uint32, sort string) (total uin
 		log.WithError(err).Error("Error in LanguageRepository.List")
 		return
 	}
+	log.Error(languages)
 	return
 }
 
