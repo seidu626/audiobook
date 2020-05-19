@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
-	language_models "github.com/seidu626/audiobook/service/language/model"
+	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	wordPB "github.com/seidu626/audiobook/service/language/proto/word"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
@@ -32,7 +32,7 @@ func NewWordHandler(repo repository.WordRepository, eve micro.Event) wordPB.Word
 
 func (h *wordHandler) Exist(ctx context.Context, req *wordPB.ExistRequest, rsp *wordPB.ExistResponse) error {
 	log.Info("Received WordHandler.Exist request")
-	model := language_models.Word{}
+	model := entities.WordORM{}
 	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Content = req.Content.GetValue()
 
@@ -78,7 +78,7 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp *wordPB.CreateResponse) error {
 	log.Info("Received WordHandler.Create request")
 
-	model := language_models.Word{}
+	model := entities.WordORM{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
 	model.LanguageID = req.LanguageId.GetValue()
@@ -104,7 +104,7 @@ func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp
 		return myErrors.ValidationError("micro.service.word.word.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Word{}
+	model := entities.WordORM{}
 	model.ID = id
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
@@ -125,7 +125,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp
 		return myErrors.ValidationError("micro.service.word.word.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Word{}
+	model := entities.WordORM{}
 	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.wordRepository.Delete(&model); err != nil {

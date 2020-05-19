@@ -9,13 +9,13 @@ import (
 
 // Language model
 type Language struct {
-	ID           string    `json:"id"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	DeletedAt    time.Time `json:"deleted_at"`
-	Name         string    `json:"name"`
-	Abbreviation string    `json:"abbreviation"`
-	FlagSrc      string    `json:"flag_src"`
+	ID           string    `gorm:"type:uuid;primary_key;unique;not null"`
+	CreatedAt    time.Time `gorm:"not null"`
+	UpdatedAt    time.Time `gorm:"not null"`
+	DeletedAt    time.Time `gorm:"index:idx_languages_deleted_at"`
+	Name         string    `gorm:"size:255;not null"`
+	Abbreviation string    `gorm:"size:10;not null"`
+	FlagSrc      string    `gorm:"size:255;not null"`
 	Words        []*Word   `json:"words"`
 }
 

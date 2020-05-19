@@ -634,13 +634,37 @@ func (m *CreateRequest) Validate() error {
 
 	// no validation rules for Disabled
 
-	// no validation rules for Description
+	if v, ok := interface{}(m.GetDescription()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateRequestValidationError{
+				field:  "Description",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for Locked
 
-	// no validation rules for Type
+	if v, ok := interface{}(m.GetType()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateRequestValidationError{
+				field:  "Type",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
-	// no validation rules for Category
+	if v, ok := interface{}(m.GetCategory()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateRequestValidationError{
+				field:  "Category",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for Index
 
@@ -652,31 +676,6 @@ func (m *CreateRequest) Validate() error {
 				cause:  err,
 			}
 		}
-	}
-
-	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateRequestValidationError{
-				field:  "Language",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	for idx, item := range m.GetWords() {
-		_, _ = idx, item
-
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return CreateRequestValidationError{
-					field:  fmt.Sprintf("Words[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
 	}
 
 	return nil

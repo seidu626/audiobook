@@ -45,13 +45,13 @@ func UnmarshalWord(word *Word) *pb.Word {
 	updatedAt, _ := ptypes.TimestampProto(word.UpdatedAt)
 	deletedAt, _ := ptypes.TimestampProto(word.DeletedAt)
 	return &pb.Word{
-		Id:         word.ID,
-		CreatedAt:  createdAt,
-		UpdatedAt:  updatedAt,
-		DeletedAt:  deletedAt,
-		Content:    word.Content,
-		AudioSrc:   word.AudioSrc,
-		LanguageId: word.LanguageID,
+		Id:        word.ID,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+		DeletedAt: deletedAt,
+		Content:   word.Content,
+		AudioSrc:  word.AudioSrc,
+		//LanguageId: word.LanguageID,
 	}
 }
 
@@ -61,12 +61,12 @@ func MarshalWord(word *pb.Word) *Word {
 	updatedAt, _ := ptypes.Timestamp(word.UpdatedAt)
 	deletedAt, _ := ptypes.Timestamp(word.DeletedAt)
 	return &Word{
-		ID:         word.Id,
-		CreatedAt:  createdAt,
-		UpdatedAt:  updatedAt,
-		DeletedAt:  deletedAt,
-		Content:    word.Content,
-		AudioSrc:   word.AudioSrc,
-		LanguageID: word.LanguageId,
+		ID:        word.Id,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+		DeletedAt: deletedAt,
+		Content:   word.Content,
+		AudioSrc:  word.AudioSrc,
+		//LanguageID: word.LanguageId,
 	}
 }

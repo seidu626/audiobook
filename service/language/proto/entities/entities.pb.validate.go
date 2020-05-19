@@ -36,90 +36,8 @@ var (
 // define the regex for a UUID once up-front
 var _entities_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 
-// Validate checks the field values on Skill with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
+// Validate is disabled for Skill. This method will always return nil.
 func (m *Skill) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	// no validation rules for Id
-
-	if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SkillValidationError{
-				field:  "CreatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SkillValidationError{
-				field:  "UpdatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetDeletedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SkillValidationError{
-				field:  "DeletedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	// no validation rules for Disabled
-
-	// no validation rules for LessonNumber
-
-	// no validation rules for Description
-
-	// no validation rules for Locked
-
-	// no validation rules for Type
-
-	// no validation rules for Title
-
-	// no validation rules for UrlTitle
-
-	// no validation rules for Category
-
-	// no validation rules for Index
-
-	// no validation rules for LanguageId
-
-	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SkillValidationError{
-				field:  "Language",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	for idx, item := range m.GetWords() {
-		_, _ = idx, item
-
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return SkillValidationError{
-					field:  fmt.Sprintf("Words[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	return nil
 }
 
@@ -177,61 +95,8 @@ var _ interface {
 	ErrorName() string
 } = SkillValidationError{}
 
-// Validate checks the field values on Word with the rules defined in the proto
-// definition for this message. If any rules are violated, an error is returned.
+// Validate is disabled for Word. This method will always return nil.
 func (m *Word) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	// no validation rules for Id
-
-	if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return WordValidationError{
-				field:  "CreatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return WordValidationError{
-				field:  "UpdatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetDeletedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return WordValidationError{
-				field:  "DeletedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	// no validation rules for Content
-
-	// no validation rules for AudioSrc
-
-	// no validation rules for LanguageId
-
-	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return WordValidationError{
-				field:  "Language",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	return nil
 }
 
@@ -289,66 +154,8 @@ var _ interface {
 	ErrorName() string
 } = WordValidationError{}
 
-// Validate checks the field values on Language with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
+// Validate is disabled for Language. This method will always return nil.
 func (m *Language) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	// no validation rules for Id
-
-	if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LanguageValidationError{
-				field:  "CreatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LanguageValidationError{
-				field:  "UpdatedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetDeletedAt()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LanguageValidationError{
-				field:  "DeletedAt",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	// no validation rules for Name
-
-	// no validation rules for Abbreviation
-
-	// no validation rules for FlagSrc
-
-	for idx, item := range m.GetWords() {
-		_, _ = idx, item
-
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return LanguageValidationError{
-					field:  fmt.Sprintf("Words[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	return nil
 }
 

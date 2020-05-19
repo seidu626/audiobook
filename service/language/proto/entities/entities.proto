@@ -6,6 +6,10 @@ option go_package = "github.com/seidu626/audiobook/service/language/proto/entiti
 
 // import "shared/proto/common/common.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "third_party/proto/protoc-gen-gorm/options/gorm.proto";
+import "third_party/proto/protoc-gen-gorm/types/types.proto";
+import "third_party/proto/validate/validate.proto";
 // import "google/protobuf/wrappers.proto";
 
 /*
@@ -13,44 +17,81 @@ import "google/protobuf/timestamp.proto";
  * tense verbs or sports vocabulary. https://duolingo.fandom.com/wiki/Skill
  */
 message Skill {
-  string id = 1;
-  google.protobuf.Timestamp created_at = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  google.protobuf.Timestamp deleted_at = 4;
-  repeated string dependencies = 5;
-  bool disabled = 6;
-  int32 lesson_number = 7;
-  string description = 8;
-  bool locked = 9;
-  string type = 10;
-  string title = 11;
-  string url_title = 12;
-  string category = 13;
-  int32 index = 14;
-  string language_id = 15;
-  Language language = 16;
-  repeated Word words = 17;
+  option (validate.disabled) = true;
+  option (gorm.opts) = {
+    ormable : true
+  };
+  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
+  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
+  // primary key
+
+  gorm.types.UUID id = 1 [ (gorm.field).tag = {
+    type : "uuid"
+    not_null : true
+    unique : true
+    primary_key : true
+  } ]; // primary key
+  google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp deleted_at = 4 [(gorm.field).tag = { index: "idx_skills_deleted_at" }];
+  repeated google.protobuf.StringValue dependencies = 5 [(gorm.field).tag = { }];
+  bool disabled = 6 [(gorm.field).tag = { }];
+  int32 lesson_number = 7 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.StringValue description = 8 [(gorm.field).tag = { not_null: false }];
+  bool locked = 9 [(gorm.field).tag = { not_null: false }];
+  google.protobuf.StringValue type = 10 [(gorm.field).tag = { not_null: false }];
+  string title = 11 [(gorm.field).tag = { size: 50 not_null: true }];
+  string url_title = 12 [(gorm.field).tag = { size: 100 not_null: true }];
+  google.protobuf.StringValue category = 13 [(gorm.field).tag = { size: 100 not_null: false }];
+  int32 index = 14 [(gorm.field).tag = { not_null: true }];
+  micro.service.language.entities.v1.Language language = 15 [(gorm.field).has_one = { preload: true }];
+  repeated micro.service.language.entities.v1.Word words = 16 [(gorm.field).has_many = { preload: true }];
 }
 
 message Word {
-  string id = 1;
-  google.protobuf.Timestamp created_at = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  google.protobuf.Timestamp deleted_at = 4;
-  string content = 5;
-  string audio_src = 6;
-  string language_id = 7;
-  Language language = 8;
+  option (validate.disabled) = true;
+  option (gorm.opts) = {
+    ormable : true
+  };
+  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
+  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
+  // primary key
+
+  gorm.types.UUID id = 1 [ (gorm.field).tag = {
+    type : "uuid"
+    not_null : true
+    unique : true
+    primary_key : true
+  } ]; // primary key
+  google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp deleted_at = 4 [(gorm.field).tag = { index: "idx_words_deleted_at" }];
+  string content = 5 [(gorm.field).tag = { not_null: true }];
+  string audio_src = 6 [(gorm.field).tag = { size: 255 not_null: true }];
+  micro.service.language.entities.v1.Language language = 8 [(gorm.field).has_one = { preload: true }];
 }
 
 // Language Entity
 message Language {
-  string id = 1;
-  google.protobuf.Timestamp created_at = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  google.protobuf.Timestamp deleted_at = 4;
-  string name = 5;
-  string abbreviation = 6;
-  string flag_src = 7;
-  repeated Word words = 8;
+  option (validate.disabled) = true;
+  option (gorm.opts) = {
+    ormable : true
+  };
+  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
+  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
+  // primary key
+
+  gorm.types.UUID id = 1 [ (gorm.field).tag = {
+    type : "uuid"
+    not_null : true
+    unique : true
+    primary_key : true
+  } ]; // primary key
+  google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
+  google.protobuf.Timestamp deleted_at = 4 [(gorm.field).tag = { index: "idx_languages_deleted_at" }];
+  string name = 5 [(gorm.field).tag = { size: 100 not_null: true }];
+  string abbreviation = 6 [(gorm.field).tag = { size: 10 not_null: true }];
+  string flag_src = 7 [(gorm.field).tag = { size: 255 not_null: true }];
+  repeated micro.service.language.entities.v1.Word words = 8 [(gorm.field).has_many = { preload: true }];
 }

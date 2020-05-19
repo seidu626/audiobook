@@ -70,7 +70,7 @@ func UnmarshalSkill(skill *Skill) *pb.Skill {
 		Category:     skill.Category,
 		Index:        skill.Index,
 		Description:  skill.Description,
-		LanguageId:   skill.LanguageID,
+		//LanguageId:   skill.LanguageID,
 	}
 }
 
@@ -95,6 +95,6 @@ func MarshalSkill(skill *pb.Skill) *Skill {
 		Category:     skill.Category,
 		Index:        skill.Index,
 		Description:  skill.Description,
-		LanguageID:   skill.LanguageId,
+		//LanguageID:   skill.LanguageId,
 	}
 }

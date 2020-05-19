@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
-	language_models "github.com/seidu626/audiobook/service/language/model"
+	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
@@ -32,7 +32,7 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
 	log.Info("Received LanguageHandler.Exist request")
-	model := language_models.Language{}
+	model := entities.LanguageORM{}
 	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
@@ -80,7 +80,7 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
 	log.Info("Received LanguageHandler.Create request")
 
-	model := language_models.Language{}
+	model := entities.LanguageORM{}
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -106,7 +106,7 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Language{}
+	model := entities.LanguageORM{}
 	model.ID = id
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
@@ -127,7 +127,7 @@ func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequ
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Language{}
+	model := entities.LanguageORM{}
 	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.languageRepository.Delete(&model); err != nil {

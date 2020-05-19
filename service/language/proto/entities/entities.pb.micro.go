@@ -5,8 +5,12 @@ package entities
 
 import (
 	fmt "fmt"
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/golang/protobuf/ptypes/timestamp"
+	_ "github.com/golang/protobuf/ptypes/wrappers"
+	_ "github.com/infobloxopen/protoc-gen-gorm/options"
+	_ "github.com/infobloxopen/protoc-gen-gorm/types"
 	math "math"
 )
 

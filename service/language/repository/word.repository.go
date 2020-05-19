@@ -5,18 +5,18 @@ import (
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	models "github.com/seidu626/audiobook/service/language/model"
+	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	log "github.com/sirupsen/logrus"
 )
 
 // WordRepository interface
 type WordRepository interface {
-	Exist(model *models.Word) bool
-	List(limit, page uint32, sort string) (total uint32, words []*models.Word, err error)
-	Get(id string) (*models.Word, error)
-	Create(model *models.Word) error
-	Update(id string, model *models.Word) error
-	Delete(model *models.Word) error
+	Exist(model *entities.WordORM) bool
+	List(limit, page uint32, sort string) (total uint32, words []*entities.WordORM, err error)
+	Get(id string) (*entities.WordORM, error)
+	Create(model *entities.WordORM) error
+	Update(id string, model *entities.WordORM) error
+	Delete(model *entities.WordORM) error
 }
 
 // wordRepository struct
@@ -32,17 +32,17 @@ func NewWordRepository(db *gorm.DB) WordRepository {
 }
 
 // Exist
-func (repo *wordRepository) Exist(model *models.Word) bool {
+func (repo *wordRepository) Exist(model *entities.WordORM) bool {
 	log.Infof("Received wordRepository.Exist request %v", *model)
 	var count int
 	if model.Content != "" && len(model.Content) > 0 {
-		repo.db.Model(&models.Word{}).Where("name = ?", model.Content).Count(&count)
+		repo.db.Model(&entities.WordORM{}).Where("name = ?", model.Content).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
 	if len(model.ID) > 0 {
-		repo.db.Model(&models.Word{}).Where("id = ?", model.ID).Count(&count)
+		repo.db.Model(&entities.WordORM{}).Where("id = ?", model.ID).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -51,7 +51,7 @@ func (repo *wordRepository) Exist(model *models.Word) bool {
 }
 
 // List
-func (repo *wordRepository) List(limit, page uint32, sort string) (total uint32, words []*models.Word, err error) {
+func (repo *wordRepository) List(limit, page uint32, sort string) (total uint32, words []*entities.WordORM, err error) {
 	db := repo.db
 
 	if limit == 0 {
@@ -76,12 +76,12 @@ func (repo *wordRepository) List(limit, page uint32, sort string) (total uint32,
 }
 
 // Find by ID
-func (repo *wordRepository) Get(id string) (word *models.Word, err error) {
+func (repo *wordRepository) Get(id string) (word *entities.WordORM, err error) {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return
 	}
-	word = &models.Word{ID: u2.String()}
+	word = &entities.WordORM{ID: u2.String()}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(word).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in WordRepository.Get")
@@ -90,7 +90,7 @@ func (repo *wordRepository) Get(id string) (word *models.Word, err error) {
 }
 
 // Create
-func (repo *wordRepository) Create(model *models.Word) error {
+func (repo *wordRepository) Create(model *entities.WordORM) error {
 	if exist := repo.Exist(model); exist {
 		return errors.New("word already exist")
 	}
@@ -103,12 +103,12 @@ func (repo *wordRepository) Create(model *models.Word) error {
 }
 
 // Update TODO: Translation
-func (repo *wordRepository) Update(id string, model *models.Word) error {
+func (repo *wordRepository) Update(id string, model *entities.WordORM) error {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return err
 	}
-	word := &models.Word{
+	word := &entities.WordORM{
 		ID: u2.String(),
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
@@ -125,7 +125,7 @@ func (repo *wordRepository) Update(id string, model *models.Word) error {
 }
 
 // Delete
-func (repo *wordRepository) Delete(model *models.Word) error {
+func (repo *wordRepository) Delete(model *entities.WordORM) error {
 	result := repo.db.Delete(model)
 	if err := result.Error; err != nil {
 		log.WithError(err).Error("Error in WordRepository.Delete")

@@ -6,8 +6,9 @@ option go_package = "github.com/seidu626/audiobook/service/language/proto/skill"
 option java_multiple_files = true;
 option java_package = "micro.service.language.skill.v1";
 
-import "google/protobuf/wrappers.proto";
+
 // import "shared/proto/common/common.proto";
+import "google/protobuf/wrappers.proto";
 import "service/language/proto/entities/entities.proto";
 import "third_party/proto/validate/validate.proto";
 
@@ -65,17 +66,17 @@ message ListResponse {
 }
 
 message GetRequest {
-  google.protobuf.StringValue id = 1
-      [ (validate.rules).string.uuid = true ]; // Not Working
-  google.protobuf.StringValue title = 2 [ (validate.rules).string = {
-    min_len : 4
-    max_len : 16
-    pattern : "^[a-z0-9_-]{3,15}$"
-    max_bytes : 256
-  } ];
-  google.protobuf.StringValue url_title = 3
-      [ (validate.rules).string.min_len = 3 ];
-  int32 lesson_number = 4;
+    google.protobuf.StringValue id = 1
+        [ (validate.rules).string.uuid = true ]; // Not Working
+    google.protobuf.StringValue title = 2 [ (validate.rules).string = {
+      min_len : 4
+      max_len : 16
+      pattern : "^[a-z0-9_-]{3,15}$"
+      max_bytes : 256
+    } ];
+    google.protobuf.StringValue url_title = 3
+        [ (validate.rules).string.min_len = 3 ];
+    int32 lesson_number = 4;
 }
 
 message GetResponse {
@@ -96,14 +97,12 @@ message CreateRequest {
   int32 lesson_number = 4;
   repeated string dependencies = 5;
   bool disabled = 6;
-  string description = 7;
+  google.protobuf.StringValue description = 7;
   bool locked = 8;
-  string type = 9;
-  string category = 10;
+  google.protobuf.StringValue type = 9;
+  google.protobuf.StringValue category = 10;
   int32 index = 11;
   google.protobuf.StringValue language_id = 12;
-  micro.service.language.entities.v1.Language language = 13;
-  repeated micro.service.language.entities.v1.Word words = 14;
 }
 
 message CreateResponse {

@@ -90,6 +90,7 @@ update_deps:
 				protoc --proto_path=.:${GOPATH}/src \
 				--go_out=paths=source_relative:. \
 				--micro_out=paths=source_relative:. \
+				--gorm_out=engine=postgres,enums=string,paths=source_relative:. \
 				--validate_out=lang=go,paths=source_relative:. $$f; \
 				echo ✓ compiled: $$f; \
 			done \
@@ -99,11 +100,12 @@ update_deps:
 			protoc --proto_path=.:${GOPATH}/src \
 			--go_out=paths=source_relative:. \
 			--micro_out=paths=source_relative:. \
+			--gorm_out=engine=postgres,enums=string,paths=source_relative:. \
 			--validate_out=lang=go,paths=source_relative:. $$f; \
 			echo ✓ compiled: $$f; \
 		done \
 	fi
-	# @rsync -a github.com/seidu626/audiobook/service/account/proto/ service/account/proto && rm -Rf github.com
+	@rsync -a github.com/seidu626/audiobook/service/language/proto/ service/language/proto && rm -Rf github.com
 
 proto_lint:
 	@echo "Linting all protos"; \

@@ -9,7 +9,7 @@ import (
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
-	language_models "github.com/seidu626/audiobook/service/language/model"
+	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
@@ -32,7 +32,7 @@ func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) skillPB.S
 
 func (h *skillHandler) Exist(ctx context.Context, req *skillPB.ExistRequest, rsp *skillPB.ExistResponse) error {
 	log.Info("Received SkillHandler.Exist request")
-	model := language_models.Skill{}
+	model := entities.SkillORM{}
 	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Title = req.Title.GetValue()
 
@@ -78,7 +78,7 @@ func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *sk
 func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, rsp *skillPB.CreateResponse) error {
 	log.Info("Received SkillHandler.Create request")
 
-	model := language_models.Skill{}
+	model := entities.SkillORM{}
 	model.Title = req.Title.GetValue()
 	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
@@ -112,7 +112,7 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 		return myErrors.ValidationError("micro.service.skill.skill.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Skill{}
+	model := entities.SkillORM{}
 	model.ID = id
 	model.Title = req.Title.GetValue()
 	model.URLTitle = req.UrlTitle.GetValue()
@@ -141,7 +141,7 @@ func (h *skillHandler) Delete(ctx context.Context, req *skillPB.DeleteRequest, r
 		return myErrors.ValidationError("micro.service.skill.skill.update", "validation error: Missing Id")
 	}
 
-	model := language_models.Skill{}
+	model := entities.SkillORM{}
 	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.skillRepository.Delete(&model); err != nil {

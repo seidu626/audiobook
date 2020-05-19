@@ -28,6 +28,7 @@ require (
 	github.com/xmlking/logger v0.1.5
 	github.com/xmlking/logger/gormlog v0.1.5
 	github.com/xmlking/logger/zerolog v0.1.5
+	go.mongodb.org/mongo-driver v1.3.3 // indirect
 	google.golang.org/genproto v0.0.0-20191216164720-4f79533eabd1
 	google.golang.org/protobuf v1.23.0
 )
