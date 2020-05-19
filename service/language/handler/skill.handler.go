@@ -9,11 +9,13 @@ import (
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
+	"github.com/seidu626/audiobook/service/language/proto/entities"
 	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
 	log "github.com/sirupsen/logrus"
+	"github.com/thoas/go-funk"
 )
 
 // SkillHandler struct
@@ -33,7 +35,7 @@ func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) skillPB.S
 func (h *skillHandler) Exist(ctx context.Context, req *skillPB.ExistRequest, rsp *skillPB.ExistResponse) error {
 	log.Info("Received SkillHandler.Exist request")
 	model := entities.SkillORM{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Title = req.Title.GetValue()
 
 	exists := h.skillRepository.Exist(&model)
@@ -49,8 +51,12 @@ func (h *skillHandler) List(ctx context.Context, req *skillPB.ListRequest, rsp *
 		return errors.NotFound("micro.service.skill.skill.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
+	results := funk.Map(skills, func(skill *entities.SkillORM) *entities.Skill {
+		tmpModel, _ := skill.ToPB(ctx)
+		return &tmpModel
+	}).([]*entities.Skill)
 
-	rsp.Results = language_models.UnmarshalSkillCollection(skills)
+	rsp.Results = results
 	return nil
 }
 
@@ -70,7 +76,8 @@ func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *sk
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 
-	rsp.Result = language_models.UnmarshalSkill(skill)
+	result, _ := skill.ToPB(ctx)
+	rsp.Result = &result
 
 	return nil
 }
@@ -89,7 +96,7 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 	model.Category = req.Category
 	model.Index = int32(req.Index)
 	model.Description = req.Description
-	model.LanguageID = req.LanguageId.GetValue()
+	model.LanguageId = req.LanguageId.GetValue()
 
 	if err := h.skillRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -113,7 +120,7 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	}
 
 	model := entities.SkillORM{}
-	model.ID = id
+	model.Id = id
 	model.Title = req.Title.GetValue()
 	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
@@ -124,7 +131,7 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	model.Category = req.Category
 	model.Index = int32(req.Index)
 	model.Description = req.Description
-	model.LanguageID = req.LanguageId.GetValue()
+	model.LanguageId = req.LanguageId.GetValue()
 
 	if err := h.skillRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -142,7 +149,7 @@ func (h *skillHandler) Delete(ctx context.Context, req *skillPB.DeleteRequest, r
 	}
 
 	model := entities.SkillORM{}
-	model.ID = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id).String()
 
 	if err := h.skillRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

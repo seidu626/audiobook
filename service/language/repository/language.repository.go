@@ -41,8 +41,8 @@ func (repo *languageRepository) Exist(model *entities.LanguageORM) bool {
 			return true
 		}
 	}
-	if len(model.ID) > 0 {
-		repo.db.Model(&entities.LanguageORM{}).Where("id = ?", model.ID).Count(&count)
+	if len(model.Id) > 0 {
+		repo.db.Model(&entities.LanguageORM{}).Where("id = ?", model.Id).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -82,13 +82,13 @@ func (repo *languageRepository) List(limit, page uint32, sort string) (total uin
 	return
 }
 
-// Find by ID
+// Find by Id
 func (repo *languageRepository) Get(id string) (language *entities.LanguageORM, err error) {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return
 	}
-	language = &entities.LanguageORM{ID: u2.String()}
+	language = &entities.LanguageORM{Id: u2.String()}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(language).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in LanguageRepository.Get")
@@ -116,7 +116,7 @@ func (repo *languageRepository) Update(id string, model *entities.LanguageORM) e
 		return err
 	}
 	language := &entities.LanguageORM{
-		ID: u2.String(),
+		Id: u2.String(),
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(language).Updates(model)

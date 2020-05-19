@@ -9,6 +9,7 @@ import (
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
+	"github.com/thoas/go-funk"
 
 	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
@@ -33,7 +34,7 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
 	log.Info("Received LanguageHandler.Exist request")
 	model := entities.LanguageORM{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 
@@ -51,8 +52,12 @@ func (h *languageHandler) List(ctx context.Context, req *languagePB.ListRequest,
 		return errors.NotFound("micro.service.language.language.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
+	results := funk.Map(languages, func(language *entities.LanguageORM) *entities.Language {
+		tmpModel, _ := language.ToPB(ctx)
+		return &tmpModel
+	}).([]*entities.Language)
 
-	rsp.Results = language_models.UnmarshalLanguageCollection(languages)
+	rsp.Results = results
 	return nil
 }
 
@@ -71,8 +76,9 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 		}
 		return myErrors.AppError(myErrors.DBE, err)
 	}
+	result, _ := language.ToPB(ctx)
 
-	rsp.Result = language_models.UnmarshalLanguage(language)
+	rsp.Result = &result
 
 	return nil
 }
@@ -107,7 +113,7 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 	}
 
 	model := entities.LanguageORM{}
-	model.ID = id
+	model.Id = id
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -128,7 +134,7 @@ func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequ
 	}
 
 	model := entities.LanguageORM{}
-	model.ID = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id).String()
 
 	if err := h.languageRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

@@ -9,6 +9,7 @@ import (
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
+	"github.com/thoas/go-funk"
 
 	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	wordPB "github.com/seidu626/audiobook/service/language/proto/word"
@@ -33,7 +34,7 @@ func NewWordHandler(repo repository.WordRepository, eve micro.Event) wordPB.Word
 func (h *wordHandler) Exist(ctx context.Context, req *wordPB.ExistRequest, rsp *wordPB.ExistResponse) error {
 	log.Info("Received WordHandler.Exist request")
 	model := entities.WordORM{}
-	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Content = req.Content.GetValue()
 
 	exists := h.wordRepository.Exist(&model)
@@ -49,8 +50,12 @@ func (h *wordHandler) List(ctx context.Context, req *wordPB.ListRequest, rsp *wo
 		return errors.NotFound("micro.service.word.word.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
+	results := funk.Map(word, func(word *entities.WordORM) *entities.Word {
+		tmpModel, _ := word.ToPB(ctx)
+		return &tmpModel
+	}).([]*entities.Language)
 
-	rsp.Results = language_models.UnmarshalWordCollection(words)
+	rsp.Results = results
 	return nil
 }
 
@@ -69,8 +74,9 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 		}
 		return myErrors.AppError(myErrors.DBE, err)
 	}
+	result, _ := word.ToPB(ctx)
 
-	rsp.Result = language_models.UnmarshalWord(word)
+	rsp.Result = &result
 
 	return nil
 }
@@ -81,7 +87,7 @@ func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp
 	model := entities.WordORM{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageID = req.LanguageId.GetValue()
+	model.LanguageId = req.LanguageId.GetValue()
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -105,10 +111,10 @@ func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp
 	}
 
 	model := entities.WordORM{}
-	model.ID = id
+	model.Id = id
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageID = req.LanguageId.GetValue()
+	model.LanguageId = req.LanguageId.GetValue()
 
 	if err := h.wordRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -126,7 +132,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp
 	}
 
 	model := entities.WordORM{}
-	model.ID = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id).String()
 
 	if err := h.wordRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

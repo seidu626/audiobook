@@ -41,14 +41,14 @@ func (repo *skillRepository) Exist(model *entities.SkillORM) bool {
 			return true
 		}
 	}
-	if len(model.ID) > 0 {
-		repo.db.Model(&entities.SkillORM{}).Where("id = ?", model.ID).Count(&count)
+	if len(model.Id) > 0 {
+		repo.db.Model(&entities.SkillORM{}).Where("id = ?", model.Id).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
-	if model.URLTitle != "" {
-		repo.db.Model(&entities.SkillORM{}).Where("code = ?", model.URLTitle).Count(&count)
+	if model.UrlTitle != "" {
+		repo.db.Model(&entities.SkillORM{}).Where("code = ?", model.UrlTitle).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -81,13 +81,13 @@ func (repo *skillRepository) List(limit, page uint32, sort string) (total uint32
 	return
 }
 
-// Find by ID
+// Find by Id
 func (repo *skillRepository) Get(id string) (skill *entities.SkillORM, err error) {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return
 	}
-	skill = &entities.SkillORM{ID: u2.String()}
+	skill = &entities.SkillORM{Id: u2.String()}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(skill).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in SkillRepository.Get")
@@ -115,7 +115,7 @@ func (repo *skillRepository) Update(id string, model *entities.SkillORM) error {
 		return err
 	}
 	skill := &entities.SkillORM{
-		ID: u2.String(),
+		Id: u2.String(),
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(skill).Updates(model)

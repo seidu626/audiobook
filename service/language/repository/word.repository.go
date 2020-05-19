@@ -41,8 +41,8 @@ func (repo *wordRepository) Exist(model *entities.WordORM) bool {
 			return true
 		}
 	}
-	if len(model.ID) > 0 {
-		repo.db.Model(&entities.WordORM{}).Where("id = ?", model.ID).Count(&count)
+	if len(model.Id) > 0 {
+		repo.db.Model(&entities.WordORM{}).Where("id = ?", model.Id).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -75,13 +75,13 @@ func (repo *wordRepository) List(limit, page uint32, sort string) (total uint32,
 	return
 }
 
-// Find by ID
+// Find by Id
 func (repo *wordRepository) Get(id string) (word *entities.WordORM, err error) {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return
 	}
-	word = &entities.WordORM{ID: u2.String()}
+	word = &entities.WordORM{Id: u2.String()}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(word).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in WordRepository.Get")
@@ -109,7 +109,7 @@ func (repo *wordRepository) Update(id string, model *entities.WordORM) error {
 		return err
 	}
 	word := &entities.WordORM{
-		ID: u2.String(),
+		Id: u2.String(),
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(word).Updates(model)
