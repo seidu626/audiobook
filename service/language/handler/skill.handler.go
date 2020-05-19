@@ -83,18 +83,27 @@ func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *sk
 
 func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, rsp *skillPB.CreateResponse) error {
 	log.Info("Received SkillHandler.Create request")
+	dependencySlice := []string{}
+	for _, dep := range req.Dependencies {
+		rec := dep.GetValue()
+		dependencySlice = append(dependencySlice, rec)
+	}
+	dependencies := strings.Join(dependencySlice, ",")
+	skillType := req.Type.GetValue()
+	category := req.Category.GetValue()
+	description := req.Description.GetValue()
 
 	model := entities.SkillORM{}
 	model.Title = req.Title.GetValue()
 	model.UrlTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = strings.Join(req.Dependencies, ",")
+	model.Dependencies = &dependencies
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
-	model.Type = req.Type.GetValue()
-	model.Category = req.Category.GetValue()
+	model.Type = &skillType
+	model.Category = &category
 	model.Index = int32(req.Index)
-	model.Description = req.Description.GetValue()
+	model.Description = &description
 	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
 	model.LanguageId = &languageId
 
@@ -119,18 +128,28 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 		return myErrors.ValidationError("micro.service.skill.skill.update", "validation error: Missing Id")
 	}
 
+	dependencySlice := []string{}
+	for _, dep := range req.Dependencies {
+		rec := dep.GetValue()
+		dependencySlice = append(dependencySlice, rec)
+	}
+	dependencies := strings.Join(dependencySlice, ",")
+	skillType := req.Type.GetValue()
+	category := req.Category.GetValue()
+	description := req.Description.GetValue()
+
 	model := entities.SkillORM{}
-	model.Id = id
+	model.Id = uuid.FromStringOrNil(id)
 	model.Title = req.Title.GetValue()
 	model.UrlTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = strings.Join(req.Dependencies, ",")
+	model.Dependencies = &dependencies
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
-	model.Type = req.Type
-	model.Category = req.Category
+	model.Type = &skillType
+	model.Category = &category
 	model.Index = int32(req.Index)
-	model.Description = req.Description
+	model.Description = &description
 	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
 	model.LanguageId = &languageId
 

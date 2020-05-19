@@ -34,7 +34,7 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
 	log.Info("Received LanguageHandler.Exist request")
 	model := entities.LanguageORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 
@@ -113,7 +113,7 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 	}
 
 	model := entities.LanguageORM{}
-	model.Id = id
+	model.Id = uuid.FromStringOrNil(id)
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -134,7 +134,7 @@ func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequ
 	}
 
 	model := entities.LanguageORM{}
-	model.Id = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id)
 
 	if err := h.languageRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

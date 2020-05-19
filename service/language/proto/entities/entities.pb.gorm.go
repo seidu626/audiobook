@@ -40,17 +40,20 @@ type SkillORM struct {
 	Category     *string    `gorm:"size:100"`
 	CreatedAt    *time.Time `gorm:"not null"`
 	DeletedAt    *time.Time `gorm:"index:idx_skills_deleted_at"`
+	Dependencies *string
 	Description  *string
 	Disabled     bool
 	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
 	Index        int32         `gorm:"not null"`
 	Language     *LanguageORM  `gorm:"foreignkey:SkillId;association_foreignkey:Id;preload:true"`
-	LessonNumber int32         `gorm:"not null"`
+	LanguageId   *go_uuid1.UUID
+	LessonNumber int32 `gorm:"not null"`
 	Locked       bool
 	Title        string `gorm:"size:50;not null"`
 	Type         *string
 	UpdatedAt    *time.Time `gorm:"not null"`
 	UrlTitle     string     `gorm:"size:100;not null"`
+	WordId       *go_uuid1.UUID
 	Words        []*WordORM `gorm:"foreignkey:SkillId;association_foreignkey:Id;preload:true"`
 }
 
@@ -98,7 +101,10 @@ func (m *Skill) ToORM(ctx context.Context) (SkillORM, error) {
 		}
 		to.DeletedAt = &t
 	}
-	// Repeated type []*google_protobuf1.StringValue is not an ORMable message type
+	if m.Dependencies != nil {
+		v := m.Dependencies.Value
+		to.Dependencies = &v
+	}
 	to.Disabled = m.Disabled
 	to.LessonNumber = m.LessonNumber
 	if m.Description != nil {
@@ -167,7 +173,9 @@ func (m *SkillORM) ToPB(ctx context.Context) (Skill, error) {
 			return to, err
 		}
 	}
-	// Repeated type []*google_protobuf1.StringValue is not an ORMable message type
+	if m.Dependencies != nil {
+		to.Dependencies = &google_protobuf1.StringValue{Value: *m.Dependencies}
+	}
 	to.Disabled = m.Disabled
 	to.LessonNumber = m.LessonNumber
 	if m.Description != nil {
@@ -238,6 +246,7 @@ type WordORM struct {
 	Id         go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
 	Language   *LanguageORM  `gorm:"foreignkey:WordId;association_foreignkey:Id;preload:true"`
 	LanguageId *go_uuid1.UUID
+	Skill      *SkillORM `gorm:"foreignkey:WordId;association_foreignkey:Id;preload:true"`
 	SkillId    *go_uuid1.UUID
 	UpdatedAt  *time.Time `gorm:"not null"`
 }
@@ -295,6 +304,13 @@ func (m *Word) ToORM(ctx context.Context) (WordORM, error) {
 		}
 		to.Language = &tempLanguage
 	}
+	if m.Skill != nil {
+		tempSkill, err := m.Skill.ToORM(ctx)
+		if err != nil {
+			return to, err
+		}
+		to.Skill = &tempSkill
+	}
 	if posthook, ok := interface{}(m).(WordWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -336,6 +352,13 @@ func (m *WordORM) ToPB(ctx context.Context) (Word, error) {
 		}
 		to.Language = &tempLanguage
 	}
+	if m.Skill != nil {
+		tempSkill, err := m.Skill.ToPB(ctx)
+		if err != nil {
+			return to, err
+		}
+		to.Skill = &tempSkill
+	}
 	if posthook, ok := interface{}(m).(WordWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
 	}
@@ -373,7 +396,8 @@ type LanguageORM struct {
 	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
 	Name         string        `gorm:"size:100;not null"`
 	SkillId      *go_uuid1.UUID
-	UpdatedAt    *time.Time `gorm:"not null"`
+	Skills       []*SkillORM `gorm:"foreignkey:LanguageId;association_foreignkey:Id;preload:true"`
+	UpdatedAt    *time.Time  `gorm:"not null"`
 	WordId       *go_uuid1.UUID
 	Words        []*WordORM `gorm:"foreignkey:LanguageId;association_foreignkey:Id;preload:true"`
 }
@@ -436,6 +460,17 @@ func (m *Language) ToORM(ctx context.Context) (LanguageORM, error) {
 			to.Words = append(to.Words, nil)
 		}
 	}
+	for _, v := range m.Skills {
+		if v != nil {
+			if tempSkills, cErr := v.ToORM(ctx); cErr == nil {
+				to.Skills = append(to.Skills, &tempSkills)
+			} else {
+				return to, cErr
+			}
+		} else {
+			to.Skills = append(to.Skills, nil)
+		}
+	}
 	if posthook, ok := interface{}(m).(LanguageWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -480,6 +515,17 @@ func (m *LanguageORM) ToPB(ctx context.Context) (Language, error) {
 			}
 		} else {
 			to.Words = append(to.Words, nil)
+		}
+	}
+	for _, v := range m.Skills {
+		if v != nil {
+			if tempSkills, cErr := v.ToPB(ctx); cErr == nil {
+				to.Skills = append(to.Skills, &tempSkills)
+			} else {
+				return to, cErr
+			}
+		} else {
+			to.Skills = append(to.Skills, nil)
 		}
 	}
 	if posthook, ok := interface{}(m).(LanguageWithAfterToPB); ok {
@@ -1129,6 +1175,15 @@ func DefaultStrictUpdateWord(ctx context.Context, in *Word, db *gorm1.DB) (*Word
 	if err = db.Where(filterLanguage).Delete(LanguageORM{}).Error; err != nil {
 		return nil, err
 	}
+	filterSkill := SkillORM{}
+	if ormObj.Id == go_uuid1.Nil {
+		return nil, errors1.EmptyIdError
+	}
+	filterSkill.WordId = new(go_uuid1.UUID)
+	*filterSkill.WordId = ormObj.Id
+	if err = db.Where(filterSkill).Delete(SkillORM{}).Error; err != nil {
+		return nil, err
+	}
 	if hook, ok := interface{}(&ormObj).(WordORMWithBeforeStrictUpdateSave); ok {
 		if db, err = hook.BeforeStrictUpdateSave(ctx, db); err != nil {
 			return nil, err
@@ -1242,6 +1297,7 @@ func DefaultApplyFieldMaskWord(ctx context.Context, patchee *Word, patcher *Word
 	}
 	var err error
 	var updatedLanguage bool
+	var updatedSkill bool
 	for i, f := range updateMask.Paths {
 		if f == prefix+"Id" {
 			patchee.Id = patcher.Id
@@ -1286,6 +1342,27 @@ func DefaultApplyFieldMaskWord(ctx context.Context, patchee *Word, patcher *Word
 		if f == prefix+"Language" {
 			updatedLanguage = true
 			patchee.Language = patcher.Language
+			continue
+		}
+		if !updatedSkill && strings.HasPrefix(f, prefix+"Skill.") {
+			updatedSkill = true
+			if patcher.Skill == nil {
+				patchee.Skill = nil
+				continue
+			}
+			if patchee.Skill == nil {
+				patchee.Skill = &Skill{}
+			}
+			if o, err := DefaultApplyFieldMaskSkill(ctx, patchee.Skill, patcher.Skill, &field_mask1.FieldMask{Paths: updateMask.Paths[i:]}, prefix+"Skill.", db); err != nil {
+				return nil, err
+			} else {
+				patchee.Skill = o
+			}
+			continue
+		}
+		if f == prefix+"Skill" {
+			updatedSkill = true
+			patchee.Skill = patcher.Skill
 			continue
 		}
 	}
@@ -1516,6 +1593,15 @@ func DefaultStrictUpdateLanguage(ctx context.Context, in *Language, db *gorm1.DB
 			return nil, err
 		}
 	}
+	filterSkills := SkillORM{}
+	if ormObj.Id == go_uuid1.Nil {
+		return nil, errors1.EmptyIdError
+	}
+	filterSkills.LanguageId = new(go_uuid1.UUID)
+	*filterSkills.LanguageId = ormObj.Id
+	if err = db.Where(filterSkills).Delete(SkillORM{}).Error; err != nil {
+		return nil, err
+	}
 	filterWords := WordORM{}
 	if ormObj.Id == go_uuid1.Nil {
 		return nil, errors1.EmptyIdError
@@ -1668,6 +1754,10 @@ func DefaultApplyFieldMaskLanguage(ctx context.Context, patchee *Language, patch
 		}
 		if f == prefix+"Words" {
 			patchee.Words = patcher.Words
+			continue
+		}
+		if f == prefix+"Skills" {
+			patchee.Skills = patcher.Skills
 			continue
 		}
 	}

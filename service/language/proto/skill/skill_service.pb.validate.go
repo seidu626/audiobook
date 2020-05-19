@@ -594,6 +594,18 @@ func (m *CreateRequest) Validate() error {
 		return nil
 	}
 
+	if wrapper := m.GetId(); wrapper != nil {
+
+		if err := m._validateUuid(wrapper.GetValue()); err != nil {
+			return CreateRequestValidationError{
+				field:  "Id",
+				reason: "value must be a valid UUID",
+				cause:  err,
+			}
+		}
+
+	}
+
 	if wrapper := m.GetTitle(); wrapper != nil {
 
 		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
@@ -631,6 +643,21 @@ func (m *CreateRequest) Validate() error {
 	}
 
 	// no validation rules for LessonNumber
+
+	for idx, item := range m.GetDependencies() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateRequestValidationError{
+					field:  fmt.Sprintf("Dependencies[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	// no validation rules for Disabled
 
@@ -676,6 +703,14 @@ func (m *CreateRequest) Validate() error {
 				cause:  err,
 			}
 		}
+	}
+
+	return nil
+}
+
+func (m *CreateRequest) _validateUuid(uuid string) error {
+	if matched := _skill_service_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
 	}
 
 	return nil
@@ -854,15 +889,54 @@ func (m *UpdateRequest) Validate() error {
 
 	// no validation rules for LessonNumber
 
+	for idx, item := range m.GetDependencies() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateRequestValidationError{
+					field:  fmt.Sprintf("Dependencies[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	// no validation rules for Disabled
 
-	// no validation rules for Description
+	if v, ok := interface{}(m.GetDescription()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateRequestValidationError{
+				field:  "Description",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for Locked
 
-	// no validation rules for Type
+	if v, ok := interface{}(m.GetType()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateRequestValidationError{
+				field:  "Type",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
-	// no validation rules for Category
+	if v, ok := interface{}(m.GetCategory()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateRequestValidationError{
+				field:  "Category",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for Index
 
