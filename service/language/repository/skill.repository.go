@@ -87,7 +87,7 @@ func (repo *skillRepository) Get(id string) (skill *entities.SkillORM, err error
 	if err != nil {
 		return
 	}
-	skill = &entities.SkillORM{Id: u2.String()}
+	skill = &entities.SkillORM{Id: u2}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(skill).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in SkillRepository.Get")
@@ -115,7 +115,7 @@ func (repo *skillRepository) Update(id string, model *entities.SkillORM) error {
 		return err
 	}
 	skill := &entities.SkillORM{
-		Id: u2.String(),
+		Id: u2,
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(skill).Updates(model)

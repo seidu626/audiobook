@@ -34,7 +34,7 @@ func NewWordHandler(repo repository.WordRepository, eve micro.Event) wordPB.Word
 func (h *wordHandler) Exist(ctx context.Context, req *wordPB.ExistRequest, rsp *wordPB.ExistResponse) error {
 	log.Info("Received WordHandler.Exist request")
 	model := entities.WordORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
 	model.Content = req.Content.GetValue()
 
 	exists := h.wordRepository.Exist(&model)
@@ -50,10 +50,10 @@ func (h *wordHandler) List(ctx context.Context, req *wordPB.ListRequest, rsp *wo
 		return errors.NotFound("micro.service.word.word.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	results := funk.Map(word, func(word *entities.WordORM) *entities.Word {
+	results := funk.Map(words, func(word *entities.WordORM) *entities.Word {
 		tmpModel, _ := word.ToPB(ctx)
 		return &tmpModel
-	}).([]*entities.Language)
+	}).([]*entities.Word)
 
 	rsp.Results = results
 	return nil
@@ -87,7 +87,8 @@ func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp
 	model := entities.WordORM{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
+	model.LanguageId = &languageId
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -111,10 +112,11 @@ func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp
 	}
 
 	model := entities.WordORM{}
-	model.Id = id
+	model.Id = uuid.FromStringOrNil(id)
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	model.LanguageId = req.LanguageId.GetValue()
+	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
+	model.LanguageId = &languageId
 
 	if err := h.wordRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -132,7 +134,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp
 	}
 
 	model := entities.WordORM{}
-	model.Id = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id)
 
 	if err := h.wordRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

@@ -88,7 +88,7 @@ func (repo *languageRepository) Get(id string) (language *entities.LanguageORM, 
 	if err != nil {
 		return
 	}
-	language = &entities.LanguageORM{Id: u2.String()}
+	language = &entities.LanguageORM{Id: u2}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(language).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in LanguageRepository.Get")
@@ -116,7 +116,7 @@ func (repo *languageRepository) Update(id string, model *entities.LanguageORM) e
 		return err
 	}
 	language := &entities.LanguageORM{
-		Id: u2.String(),
+		Id: u2,
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(language).Updates(model)

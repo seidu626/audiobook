@@ -81,7 +81,7 @@ func (repo *wordRepository) Get(id string) (word *entities.WordORM, err error) {
 	if err != nil {
 		return
 	}
-	word = &entities.WordORM{Id: u2.String()}
+	word = &entities.WordORM{Id: u2}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(word).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in WordRepository.Get")
@@ -109,7 +109,7 @@ func (repo *wordRepository) Update(id string, model *entities.WordORM) error {
 		return err
 	}
 	word := &entities.WordORM{
-		Id: u2.String(),
+		Id: u2,
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(word).Updates(model)

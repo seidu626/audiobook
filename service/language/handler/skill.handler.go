@@ -9,7 +9,6 @@ import (
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
-	"github.com/seidu626/audiobook/service/language/proto/entities"
 	entities "github.com/seidu626/audiobook/service/language/proto/entities"
 	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
 	"github.com/seidu626/audiobook/service/language/repository"
@@ -87,7 +86,7 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 
 	model := entities.SkillORM{}
 	model.Title = req.Title.GetValue()
-	model.URLTitle = req.UrlTitle.GetValue()
+	model.UrlTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
 	model.Dependencies = strings.Join(req.Dependencies, ",")
 	model.Disabled = req.Disabled
@@ -95,8 +94,9 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 	model.Type = req.Type
 	model.Category = req.Category
 	model.Index = int32(req.Index)
-	model.Description = req.Description
-	model.LanguageId = req.LanguageId.GetValue()
+	model.Description = req.Description.GetValue()
+	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
+	model.LanguageId = &languageId
 
 	if err := h.skillRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -122,7 +122,7 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	model := entities.SkillORM{}
 	model.Id = id
 	model.Title = req.Title.GetValue()
-	model.URLTitle = req.UrlTitle.GetValue()
+	model.UrlTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
 	model.Dependencies = strings.Join(req.Dependencies, ",")
 	model.Disabled = req.Disabled
@@ -131,7 +131,8 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	model.Category = req.Category
 	model.Index = int32(req.Index)
 	model.Description = req.Description
-	model.LanguageId = req.LanguageId.GetValue()
+	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
+	model.LanguageId = &languageId
 
 	if err := h.skillRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -149,7 +150,7 @@ func (h *skillHandler) Delete(ctx context.Context, req *skillPB.DeleteRequest, r
 	}
 
 	model := entities.SkillORM{}
-	model.Id = uuid.FromStringOrNil(id).String()
+	model.Id = uuid.FromStringOrNil(id)
 
 	if err := h.skillRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
