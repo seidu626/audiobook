@@ -34,7 +34,7 @@ func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) skillPB.S
 func (h *skillHandler) Exist(ctx context.Context, req *skillPB.ExistRequest, rsp *skillPB.ExistResponse) error {
 	log.Info("Received SkillHandler.Exist request")
 	model := entities.SkillORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue()).String()
+	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
 	model.Title = req.Title.GetValue()
 
 	exists := h.skillRepository.Exist(&model)
@@ -91,8 +91,8 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 	model.Dependencies = strings.Join(req.Dependencies, ",")
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
-	model.Type = req.Type
-	model.Category = req.Category
+	model.Type = req.Type.GetValue()
+	model.Category = req.Category.GetValue()
 	model.Index = int32(req.Index)
 	model.Description = req.Description.GetValue()
 	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
