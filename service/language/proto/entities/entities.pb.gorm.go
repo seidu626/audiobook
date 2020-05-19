@@ -43,7 +43,7 @@ type SkillORM struct {
 	Dependencies *string
 	Description  *string
 	Disabled     bool
-	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
+	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;default:uuid_generate_v4();not null"`
 	Index        int32         `gorm:"not null"`
 	Language     *LanguageORM  `gorm:"foreignkey:SkillId;association_foreignkey:Id;preload:true"`
 	LanguageId   *go_uuid1.UUID
@@ -243,7 +243,7 @@ type WordORM struct {
 	Content    string        `gorm:"not null"`
 	CreatedAt  *time.Time    `gorm:"not null"`
 	DeletedAt  *time.Time    `gorm:"index:idx_words_deleted_at"`
-	Id         go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
+	Id         go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;default:uuid_generate_v4();not null"`
 	Language   *LanguageORM  `gorm:"foreignkey:WordId;association_foreignkey:Id;preload:true"`
 	LanguageId *go_uuid1.UUID
 	Skill      *SkillORM `gorm:"foreignkey:WordId;association_foreignkey:Id;preload:true"`
@@ -393,7 +393,7 @@ type LanguageORM struct {
 	CreatedAt    *time.Time    `gorm:"not null"`
 	DeletedAt    *time.Time    `gorm:"index:idx_languages_deleted_at"`
 	FlagSrc      string        `gorm:"size:255;not null"`
-	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;not null"`
+	Id           go_uuid1.UUID `gorm:"type:uuid;primary_key;unique;default:uuid_generate_v4();not null"`
 	Name         string        `gorm:"size:100;not null"`
 	SkillId      *go_uuid1.UUID
 	Skills       []*SkillORM `gorm:"foreignkey:LanguageId;association_foreignkey:Id;preload:true"`

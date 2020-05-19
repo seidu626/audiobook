@@ -21,15 +21,12 @@ message Skill {
   option (gorm.opts) = {
     ormable : true
   };
-  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
-  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
-  // primary key
-
   gorm.types.UUID id = 1 [ (gorm.field).tag = {
     type : "uuid"
     not_null : true
     unique : true
     primary_key : true
+    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
@@ -53,15 +50,12 @@ message Word {
   option (gorm.opts) = {
     ormable : true
   };
-  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
-  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
-  // primary key
-
   gorm.types.UUID id = 1 [ (gorm.field).tag = {
     type : "uuid"
     not_null : true
     unique : true
     primary_key : true
+    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
@@ -78,15 +72,12 @@ message Language {
   option (gorm.opts) = {
     ormable : true
   };
-  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
-  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
-  // primary key
-
   gorm.types.UUID id = 1 [ (gorm.field).tag = {
     type : "uuid"
     not_null : true
     unique : true
     primary_key : true
+    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
