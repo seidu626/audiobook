@@ -21,12 +21,15 @@ message Skill {
   option (gorm.opts) = {
     ormable : true
   };
+  // gorm.types.UUID id                      = 1  [(gorm.field).tag = {
+  // type: "uuid", primary_key: true, default: "uuid_generate_v4()" }]; //
+  // primary key
+
   gorm.types.UUID id = 1 [ (gorm.field).tag = {
     type : "uuid"
     not_null : true
     unique : true
     primary_key : true
-    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
@@ -41,8 +44,7 @@ message Skill {
   string url_title = 12 [(gorm.field).tag = { size: 100 not_null: true }];
   google.protobuf.StringValue category = 13 [(gorm.field).tag = { size: 100 not_null: false }];
   int32 index = 14 [(gorm.field).tag = { not_null: true }];
-  micro.service.language.entities.v1.Language language = 15 [(gorm.field).has_one = { preload: true }];
-  repeated micro.service.language.entities.v1.Word words = 16 [(gorm.field).has_many = { preload: true }];
+  repeated micro.service.language.entities.v1.Word words = 15 [(gorm.field).has_many = { preload: true }];
 }
 
 message Word {
@@ -55,15 +57,13 @@ message Word {
     not_null : true
     unique : true
     primary_key : true
-    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp deleted_at = 4 [(gorm.field).tag = { index: "idx_words_deleted_at" }];
   string content = 5 [(gorm.field).tag = { not_null: true }];
   string audio_src = 6 [(gorm.field).tag = { size: 255 not_null: true }];
-  micro.service.language.entities.v1.Language language = 8 [(gorm.field).has_one = { preload: true }];
-  micro.service.language.entities.v1.Skill skill = 9 [(gorm.field).has_one = { preload: true }];
+  micro.service.language.entities.v1.Skill Skill = 7 [(gorm.field).has_one = { preload: false }];
 }
 
 // Language Entity
@@ -77,7 +77,6 @@ message Language {
     not_null : true
     unique : true
     primary_key : true
-    default: "uuid_generate_v4()"
   } ]; // primary key
   google.protobuf.Timestamp created_at = 2 [(gorm.field).tag = { not_null: true }];
   google.protobuf.Timestamp updated_at = 3 [(gorm.field).tag = { not_null: true }];
@@ -85,6 +84,5 @@ message Language {
   string name = 5 [(gorm.field).tag = { size: 100 not_null: true }];
   string abbreviation = 6 [(gorm.field).tag = { size: 10 not_null: true }];
   string flag_src = 7 [(gorm.field).tag = { size: 255 not_null: true }];
-  repeated micro.service.language.entities.v1.Word words = 8 [(gorm.field).has_many = { preload: true }];
   repeated micro.service.language.entities.v1.Skill skills = 9 [(gorm.field).has_many = { preload: true }];
 }

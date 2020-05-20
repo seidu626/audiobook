@@ -608,24 +608,10 @@ func (m *CreateRequest) Validate() error {
 
 	if wrapper := m.GetTitle(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 50 {
 			return CreateRequestValidationError{
 				field:  "Title",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return CreateRequestValidationError{
-				field:  "Title",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_CreateRequest_Title_Pattern.MatchString(wrapper.GetValue()) {
-			return CreateRequestValidationError{
-				field:  "Title",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be between 4 and 50 runes, inclusive",
 			}
 		}
 
@@ -770,8 +756,6 @@ var _ interface {
 	ErrorName() string
 } = CreateRequestValidationError{}
 
-var _CreateRequest_Title_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
-
 // Validate is disabled for CreateResponse. This method will always return nil.
 func (m *CreateResponse) Validate() error {
 	return nil
@@ -853,24 +837,10 @@ func (m *UpdateRequest) Validate() error {
 
 	if wrapper := m.GetTitle(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 50 {
 			return UpdateRequestValidationError{
 				field:  "Title",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return UpdateRequestValidationError{
-				field:  "Title",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_UpdateRequest_Title_Pattern.MatchString(wrapper.GetValue()) {
-			return UpdateRequestValidationError{
-				field:  "Title",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be between 4 and 50 runes, inclusive",
 			}
 		}
 
@@ -1014,8 +984,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateRequestValidationError{}
-
-var _UpdateRequest_Title_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for UpdateResponse. This method will always return nil.
 func (m *UpdateResponse) Validate() error {

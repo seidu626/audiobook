@@ -87,8 +87,8 @@ func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp
 	model := entities.WordORM{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
-	model.LanguageId = &languageId
+	skillId := uuid.FromStringOrNil(req.SkillId)
+	model.SkillId = &skillId
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -115,8 +115,8 @@ func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp
 	model.Id = uuid.FromStringOrNil(id)
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
-	model.LanguageId = &languageId
+	skillId := uuid.FromStringOrNil(req.SkillId)
+	model.SkillId = &skillId
 
 	if err := h.wordRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

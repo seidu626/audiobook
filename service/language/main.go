@@ -12,6 +12,7 @@ import (
 	"github.com/seidu626/audiobook/service/language/handler"
 	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
 	skillPB "github.com/seidu626/audiobook/service/language/proto/skill"
+	wordPB "github.com/seidu626/audiobook/service/language/proto/word"
 	"github.com/seidu626/audiobook/service/language/registry"
 	"github.com/seidu626/audiobook/service/language/repository"
 	myConfig "github.com/seidu626/audiobook/shared/config"
@@ -109,10 +110,12 @@ func main() {
 	// // Handlers
 	languageHandler := handler.NewLanguageHandler(ctn.Resolve("language-repository").(repository.LanguageRepository), publisher)
 	skillHandler := ctn.Resolve("skill-handler").(skillPB.SkillServiceHandler)
+	wordHandler := ctn.Resolve("word-handler").(wordPB.WordServiceHandler)
 
 	// Register Handlers
 	languagePB.RegisterLanguageServiceHandler(service.Server(), languageHandler)
 	skillPB.RegisterSkillServiceHandler(service.Server(), skillHandler)
+	wordPB.RegisterWordServiceHandler(service.Server(), wordHandler)
 
 	myConfig.PrintBuildInfo()
 	// Run service

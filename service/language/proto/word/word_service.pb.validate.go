@@ -58,24 +58,10 @@ func (m *ExistRequest) Validate() error {
 
 	if wrapper := m.GetContent(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 4 {
 			return ExistRequestValidationError{
 				field:  "Content",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return ExistRequestValidationError{
-				field:  "Content",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_ExistRequest_Content_Pattern.MatchString(wrapper.GetValue()) {
-			return ExistRequestValidationError{
-				field:  "Content",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be at least 4 runes",
 			}
 		}
 
@@ -145,8 +131,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ExistRequestValidationError{}
-
-var _ExistRequest_Content_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for ExistResponse. This method will always return nil.
 func (m *ExistResponse) Validate() error {
@@ -249,24 +233,10 @@ func (m *ListRequest) Validate() error {
 
 	if wrapper := m.GetContent(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 4 {
 			return ListRequestValidationError{
 				field:  "Content",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return ListRequestValidationError{
-				field:  "Content",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_ListRequest_Content_Pattern.MatchString(wrapper.GetValue()) {
-			return ListRequestValidationError{
-				field:  "Content",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be at least 4 runes",
 			}
 		}
 
@@ -350,8 +320,6 @@ var _ interface {
 	ErrorName() string
 } = ListRequestValidationError{}
 
-var _ListRequest_Content_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
-
 // Validate is disabled for ListResponse. This method will always return nil.
 func (m *ListResponse) Validate() error {
 	return nil
@@ -432,24 +400,10 @@ func (m *GetRequest) Validate() error {
 
 	if wrapper := m.GetContent(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 4 {
 			return GetRequestValidationError{
 				field:  "Content",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return GetRequestValidationError{
-				field:  "Content",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_GetRequest_Content_Pattern.MatchString(wrapper.GetValue()) {
-			return GetRequestValidationError{
-				field:  "Content",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be at least 4 runes",
 			}
 		}
 
@@ -531,8 +485,6 @@ var _ interface {
 	ErrorName() string
 } = GetRequestValidationError{}
 
-var _GetRequest_Content_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
-
 // Validate is disabled for GetResponse. This method will always return nil.
 func (m *GetResponse) Validate() error {
 	return nil
@@ -602,24 +554,10 @@ func (m *CreateRequest) Validate() error {
 
 	if wrapper := m.GetContent(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 4 {
 			return CreateRequestValidationError{
 				field:  "Content",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return CreateRequestValidationError{
-				field:  "Content",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_CreateRequest_Content_Pattern.MatchString(wrapper.GetValue()) {
-			return CreateRequestValidationError{
-				field:  "Content",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be at least 4 runes",
 			}
 		}
 
@@ -636,23 +574,10 @@ func (m *CreateRequest) Validate() error {
 
 	}
 
-	if v, ok := interface{}(m.GetLanguageId()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateRequestValidationError{
-				field:  "LanguageId",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if v, ok := interface{}(m.GetLanguage()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CreateRequestValidationError{
-				field:  "Language",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+	if utf8.RuneCountInString(m.GetSkillId()) < 3 {
+		return CreateRequestValidationError{
+			field:  "SkillId",
+			reason: "value length must be at least 3 runes",
 		}
 	}
 
@@ -712,8 +637,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateRequestValidationError{}
-
-var _CreateRequest_Content_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for CreateResponse. This method will always return nil.
 func (m *CreateResponse) Validate() error {
@@ -796,24 +719,10 @@ func (m *UpdateRequest) Validate() error {
 
 	if wrapper := m.GetContent(); wrapper != nil {
 
-		if l := utf8.RuneCountInString(wrapper.GetValue()); l < 4 || l > 16 {
+		if utf8.RuneCountInString(wrapper.GetValue()) < 4 {
 			return UpdateRequestValidationError{
 				field:  "Content",
-				reason: "value length must be between 4 and 16 runes, inclusive",
-			}
-		}
-
-		if len(wrapper.GetValue()) > 256 {
-			return UpdateRequestValidationError{
-				field:  "Content",
-				reason: "value length must be at most 256 bytes",
-			}
-		}
-
-		if !_UpdateRequest_Content_Pattern.MatchString(wrapper.GetValue()) {
-			return UpdateRequestValidationError{
-				field:  "Content",
-				reason: "value does not match regex pattern \"^[a-z0-9_-]{3,15}$\"",
+				reason: "value length must be at least 4 runes",
 			}
 		}
 
@@ -830,13 +739,10 @@ func (m *UpdateRequest) Validate() error {
 
 	}
 
-	if v, ok := interface{}(m.GetLanguageId()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateRequestValidationError{
-				field:  "LanguageId",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+	if utf8.RuneCountInString(m.GetSkillId()) < 3 {
+		return UpdateRequestValidationError{
+			field:  "SkillId",
+			reason: "value length must be at least 3 runes",
 		}
 	}
 
@@ -904,8 +810,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateRequestValidationError{}
-
-var _UpdateRequest_Content_Pattern = regexp.MustCompile("^[a-z0-9_-]{3,15}$")
 
 // Validate is disabled for UpdateResponse. This method will always return nil.
 func (m *UpdateResponse) Validate() error {
