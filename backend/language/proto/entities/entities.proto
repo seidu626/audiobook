@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package audiobook.backend.language.entities.v1;
+
+option go_package = "github.com/seidu626/audiobook/backend/language/proto/entities";
+
+// import "shared/proto/common/common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+// import "google/protobuf/wrappers.proto";
+
+message Exercise {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+  string content = 5;
+  string audio_src = 6;
+  audiobook.backend.language.entities.v1.Skill Skill = 7;
+}
+
+/*
+ * A skill is a set of lessons focused on a particular topic, such as present
+ * tense verbs or sports vocabulary. https://duolingo.fandom.com/wiki/Skill
+ */
+message Skill {
+
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+  google.protobuf.StringValue dependencies = 5;
+  int32 lesson_number = 7;
+  google.protobuf.StringValue description = 8;
+  bool locked = 9;
+  google.protobuf.StringValue type = 10;
+  string title = 11;
+  string url_title = 12;
+  google.protobuf.StringValue category = 13;
+  int32 index = 14;
+  repeated audiobook.backend.language.entities.v1.Word words = 15;
+}
+
+message Word {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  google.protobuf.Timestamp deleted_at = 4 ;
+  string content = 5;
+  string audio_src = 6;
+  audiobook.backend.language.entities.v1.Skill Skill = 7;
+}
+
+// Language Entity
+message Language {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+  string name = 5;
+  string abbreviation = 6;
+  string flag_src = 7;
+  repeated audiobook.backend.language.entities.v1.Skill skills = 9;
+}

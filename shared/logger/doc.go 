@@ -1,5 +1,0 @@
-// logger setup from micro-strter-kit
-// import "github.com/seidu626/audiobook/shared/logger" to `main.go` and all test files.
-// add logger.InitLogger(cfg.Log) in service.Init()
-// set log level and format in config.yaml
-package logger
