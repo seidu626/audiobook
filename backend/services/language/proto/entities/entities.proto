@@ -24,7 +24,6 @@ message Exercise {
  * tense verbs or sports vocabulary. https://duolingo.fandom.com/wiki/Skill
  */
 message Skill {
-
   string id = 1;
   google.protobuf.Timestamp created_at = 2;
   google.protobuf.Timestamp updated_at = 3;

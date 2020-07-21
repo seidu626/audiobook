@@ -3,12 +3,11 @@ syntax = "proto3";
 package audiobook.backend.language.skill.v1;
 
 option go_package = "github.com/seidu626/audiobook/service/language/proto/skill";
-option java_multiple_files = true;
-option java_package = "audiobook.backend.language.skill.v1";
 
 // import "shared/proto/common/common.proto";
 import "google/protobuf/wrappers.proto";
-import "language/proto/entities/entities.proto";
+import "services/language/proto/entities/entities.proto";
+import "validate/validate.proto";
 
 // Ref:
 // https://github.com/seizadi/atlas-template/blob/master/resolved/pkg/pb/cmdb.proto

@@ -9,14 +9,14 @@ import (
 
 // Language model
 type Language struct {
-	ID           string    `json:id`
+	ID           string    `gorm:"primary_key;column:Id;type:STRING;" json:"id" db:"Id" protobuf:"string,0,opt,name=id"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	DeletedAt    time.Time `json:"deleted_at"`
 	Name         string    `json:"name"`
 	Abbreviation string    `json:"abbreviation"`
 	FlagSrc      string    `json:"flagSrc"`
-	Words        []*Word   `json:"words"`
+	Words        []*Word   `gorm:"foreignkey:LanguageID" json:"words"`
 }
 
 // Languages language collection

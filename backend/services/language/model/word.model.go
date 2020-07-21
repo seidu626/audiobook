@@ -4,12 +4,12 @@ import (
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
-	pb "github.com/seidu626/audiobook/service/language/proto/entities"
+	pb "github.com/seidu626/audiobook/backend/language/proto/entities"
 )
 
 // Word model
 type Word struct {
-	ID         string    `json:"id"`
+	ID         string    `gorm:"primary_key;column:Id;type:STRING;" json:"id" db:"Id" protobuf:"string,0,opt,name=id"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	DeletedAt  time.Time `json:"deleted_at"`
