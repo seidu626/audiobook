@@ -1,12 +1,11 @@
 package main
 
 import (
-	"path/filepath"
-
 	"github.com/getsentry/sentry-go"
-	"github.com/micro/cli/v2"
 	"github.com/micro/go-micro/v2"
-	"github.com/micro/go-micro/v2/config"
+	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/server"
+	"github.com/rs/zerolog/log"
 
 	"github.com/seidu626/audiobook/services/language/handler"
 	languagePB "github.com/seidu626/audiobook/services/language/proto/language"
@@ -14,101 +13,85 @@ import (
 	wordPB "github.com/seidu626/audiobook/services/language/proto/word"
 	"github.com/seidu626/audiobook/services/language/registry"
 	"github.com/seidu626/audiobook/services/language/repository"
-	myConfig "github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/shared/config"
 	"github.com/seidu626/audiobook/shared/constants"
-	"github.com/seidu626/audiobook/shared/logger"
-	"github.com/seidu626/audiobook/shared/util"
+	myMicro "github.com/seidu626/audiobook/shared/util/micro"
 	logWrapper "github.com/seidu626/audiobook/shared/wrapper/log"
 	transWrapper "github.com/seidu626/audiobook/shared/wrapper/transaction"
 	validatorWrapper "github.com/seidu626/audiobook/shared/wrapper/validator"
 )
 
-const (
-	serviceName = constants.LANGUAGE_SERVICE
-	configDir   = "/config"
-	configFile  = "config.yaml"
-)
-
-var (
-	cfg myConfig.ServiceConfiguration
-)
-
 func main() {
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn: "https://1c23b49583a64ceebb5af93ab9974377@o336647.ingest.sentry.io/5303538",
+		// Enable printing of SDK debug messages.
+		// Useful when getting started or trying to figure something out.
+		Debug: true,
 	})
+
 	if err != nil {
-		log.Fatalf("sentry.Init: %s", err)
+		log.Fatal().Msgf("sentry.Init: %s", err)
 	}
 
-	// New Service
-	service := micro.NewService(
-		micro.Name(serviceName),
-		micro.Version(myConfig.Version),
-	)
+	cfg := config.GetConfig()
 
-	// Initialize service
-	service.Init(
-		micro.Action(func(c *cli.Context) (err error) {
-			// load config
-			myConfig.InitConfig(configDir, configFile)
-			err = config.Scan(&cfg)
-			logger.InitLogger(cfg.Log)
+	// Initialize Features
+	var clientWrappers []client.Wrapper
+	var handlerWrappers []server.HandlerWrapper
+	var subscriberWrappers []server.SubscriberWrapper
+
+	// Wrappers are invoked in the order as they added
+	if cfg.Features.Reqlogs.Enabled {
+		clientWrappers = append(clientWrappers, logWrapper.NewClientWrapper())
+		handlerWrappers = append(handlerWrappers, logWrapper.NewHandlerWrapper())
+		subscriberWrappers = append(subscriberWrappers, logWrapper.NewSubscriberWrapper())
+	}
+	//if cfg.Features.Translogs.Enabled {
+	//    topic := cfg.Features.Translogs.Topic
+	//    publisher := micro.NewEvent(topic, client.DefaultClient) // service.Client())
+	//    handlerWrappers = append(handlerWrappers, transWrapper.NewHandlerWrapper(publisher))
+	//    subscriberWrappers = append(subscriberWrappers, transWrapper.NewSubscriberWrapper(publisher))
+	//}
+	if cfg.Features.Validator.Enabled {
+		handlerWrappers = append(handlerWrappers, validatorWrapper.NewHandlerWrapper())
+		subscriberWrappers = append(subscriberWrappers, validatorWrapper.NewSubscriberWrapper())
+	}
+
+	service := micro.NewService(
+		micro.Name(constants.ACCOUNT_SERVICE),
+		micro.Version(config.Version),
+		myMicro.WithTLS(),
+		// Wrappers are applied in reverse order so the last is executed first.
+		micro.WrapClient(clientWrappers...),
+		// Adding some optional lifecycle actions
+		micro.BeforeStart(func() (err error) {
+			log.Debug().Msg("called BeforeStart")
+			return
+		}),
+		micro.BeforeStop(func() (err error) {
+			log.Debug().Msg("called BeforeStop")
 			return
 		}),
 	)
 
-	// Initialize Features
-	var options []micro.Option
-	if cfg.Features["mtls"].Enabled {
-		// if tlsConf, err := util.GetSelfSignedTLSConfig("localhost"); err != nil {
-		if tlsConf, err := util.GetTLSConfig(
-			filepath.Join(configDir, config.Get("features", "mtls", "certfile").String("")),
-			filepath.Join(configDir, config.Get("features", "mtls", "keyfile").String("")),
-			filepath.Join(configDir, config.Get("features", "mtls", "cafile").String("")),
-			filepath.Join(configDir, config.Get("features", "mtls", "servername").String("")),
-		); err != nil {
-			log.WithError(err).Error("unable to load certs")
-		} else {
-			println(tlsConf)
-			options = append(options,
-				util.WithTLS(tlsConf),
-			)
-		}
-	}
-	// Wrappers are invoked in the order as they added
-	if cfg.Features["reqlogs"].Enabled {
-		options = append(options,
-			micro.WrapHandler(logWrapper.NewHandlerWrapper()),
-			micro.WrapClient(logWrapper.NewClientWrapper()),
-		)
-	}
-	if cfg.Features["validator"].Enabled {
-		options = append(options,
-			micro.WrapHandler(validatorWrapper.NewHandlerWrapper()),
-		)
-	}
-	if cfg.Features["translogs"].Enabled {
-		topic := config.Get("features", "translogs", "topic").String("mkit.service.recorder")
+	if cfg.Features.Translogs.Enabled {
+		topic := cfg.Features.Translogs.Topic
 		publisher := micro.NewEvent(topic, service.Client())
-		options = append(options,
-			micro.WrapHandler(transWrapper.NewHandlerWrapper(publisher)),
-		)
+		handlerWrappers = append(handlerWrappers, transWrapper.NewHandlerWrapper(publisher))
+		subscriberWrappers = append(subscriberWrappers, transWrapper.NewSubscriberWrapper(publisher))
 	}
 
-	// Initialize Features
 	service.Init(
-		options...,
+		micro.WrapHandler(handlerWrappers...),
+		micro.WrapSubscriber(subscriberWrappers...),
 	)
 
 	// Initialize DI Container
 	ctn, err := registry.NewContainer(cfg)
 	defer ctn.Clean()
 	if err != nil {
-		log.Fatalf("failed to build container: %v", err)
+		log.Fatal().Msgf("failed to build container: %v", err)
 	}
-
-	log.Debugf("Client type: grpc or regular? %T\n", service.Client()) // FIXME: expected *grpc.grpcClient but got *micro.clientWrapper
 
 	// Publisher publish to "mkit.service.emailer"
 	publisher := micro.NewEvent(constants.EMAILER_SERVICE, service.Client())
@@ -123,9 +106,8 @@ func main() {
 	skillPB.RegisterSkillServiceHandler(service.Server(), skillHandler)
 	wordPB.RegisterWordServiceHandler(service.Server(), wordHandler)
 
-	myConfig.PrintBuildInfo()
 	// Run service
 	if err := service.Run(); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Send()
 	}
 }
