@@ -7,8 +7,8 @@ import (
 	"github.com/seidu626/audiobook/services/language/handler"
 	entities "github.com/seidu626/audiobook/services/language/proto/entities"
 	"github.com/seidu626/audiobook/services/language/repository"
-	"github.com/seidu626/audiobook/shared/config"
 	"github.com/seidu626/audiobook/shared/database"
+	configPB "github.com/seidu626/audiobook/shared/proto/config"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -18,10 +18,10 @@ type Container struct {
 }
 
 // NewContainer - create new Container
-func NewContainer(cfg config.ServiceConfiguration) (*Container, error) {
+func NewContainer(cfg configPB.Configuration) (*Container, error) {
 	builder, err := di.NewBuilder()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("")
 		return nil, err
 	}
 

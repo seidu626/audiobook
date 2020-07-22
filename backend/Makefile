@@ -2,8 +2,8 @@
 # make        	# compile all binary
 # make clean  	# remove ALL binaries and objects
 # make release  # add git TAG and push
-GITHUB_REPO_OWNER 				:= xmlking
-GITHUB_REPO_NAME 					:= micro-starter-kit
+GITHUB_REPO_OWNER 				:= seidu626
+GITHUB_REPO_NAME 					:= audiobook
 GITHUB_RELEASES_UI_URL 		:= https://github.com/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/releases
 GITHUB_RELEASES_API_URL 	:= https://api.github.com/repos/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/releases
 GITHUB_RELEASE_ASSET_URL	:= https://uploads.github.com/repos/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/releases
@@ -27,7 +27,7 @@ HAS_GOVVV				:= $(shell command -v govvv 2> /dev/null)
 HAS_PKGER				:= $(shell command -v pkger 2> /dev/null)
 HAS_KO					:= $(shell command -v ko 2> /dev/null)
 
-# Type of service e.g api, service, web, cmd (default: "service")
+# Type of service e.g api, services, web, cmd (default: "service")
 TYPE = $(or $(word 2,$(subst -, ,$*)), services)
 override TYPES:= service
 # Target for running the action
@@ -41,12 +41,12 @@ BUILD_FLAGS = $(shell govvv -flags -version $(VERSION) -pkg $(VERSION_PACKAGE))
 # $(warning VERSION_PACKAGE = $(VERSION_PACKAGE), BUILD_FLAGS = $(BUILD_FLAGS))
 
 .PHONY: all tools, check_dirty, clean, update_deps
-.PHONY: proto-% proto_lint proto_format
-.PHONY: lint-%, gomod_lint
-.PHONY: format-%
-.PHONY: pkger-%
-.PHONY: build-%
-.PHONY: run-%
+.PHONY: proto proto-% proto_lint proto_format
+.PHONY: lint lint-%, gomod_lint
+.PHONY: format format-%
+.PHONY: pkger pkger-%
+.PHONY: build build-%
+.PHONY: run run-%
 .PHONY: docker_clean docker docker-% docker_push
 .PHONY: kustomize build/kustomize
 .PHONY: release/draft release/publish
@@ -83,7 +83,7 @@ update_deps:
 
 # FIXME: protoc-gen-gorm is dumb. it creates github.com dir
 
- proto-%:
+proto-%:
 	@if [ -z $(TARGET) ]; then \
 		for d in $(TYPES); do \
 			for f in $$d/**/proto/**/*.proto; do \
@@ -107,6 +107,14 @@ update_deps:
 	fi
 
 
+proto_shared:
+	@for f in ./shared/proto/**/*.proto; do \
+		protoc --proto_path=.:${GOPATH}/src \
+		--gofast_out=plugins=grpc,paths=source_relative:. \
+		--validate_out=lang=gogo,paths=source_relative:. $$f; \
+		echo ✓ compiled: $$f; \
+	done
+
 proto_lint:
 	@echo "Linting all protos"; \
 	@${GOPATH}/bin/buf check lint
@@ -123,15 +131,15 @@ gomod_lint:
 lint-%:
 	@if [ -z $(TARGET) ]; then \
 		echo "Linting all go"; \
-		${GOPATH}/bin/golangci-lint run ./... --deadline=5m; \
+		${GOPATH}/bin/golangci-lint run ./... --deadline=5m --config=.github/linters/.golangci.yml; \
 	else \
 		echo "Linting go in ${TARGET}-${TYPE}..."; \
-		${GOPATH}/bin/golangci-lint run ./${TYPE}/${TARGET}/... ; \
+		${GOPATH}/bin/golangci-lint run ./${TYPE}/${TARGET}/... --config=.github/linters/.golangci.yml; \
 	fi
 
 # @clang-format -i $(shell find . -type f -name '*.proto')
 
- format-%:
+format-%:
 	@if [ -z $(TARGET) ]; then \
 		echo "Formating all go"; \
 		gofmt -l -w . ; \
@@ -152,12 +160,12 @@ endif
 			for _target in $${type}/*/; do \
 				temp=$${_target%%/}; target=$${temp#*/}; \
 				echo "\tPackaging config for $${target}-$${type}"; \
-				${GOPATH}/bin/pkger -o $${type}/$${target} -include /config; \
+				${GOPATH}/bin/pkger -o $${type}/$${target} -include /config/config.yaml -include /config/config.prod.yaml -include /config/certs; \
 			done \
 		done \
 	else \
 		echo "Packaging config for ${TARGET}-${TYPE}..."; \
-		${GOPATH}/bin/pkger -o ${TYPE}/${TARGET} -include /config ; \
+		${GOPATH}/bin/pkger -o ${TYPE}/${TARGET} -include /config/config.yaml -include /config/config.prod.yaml -include /config/certs ; \
 	fi
 
 build-%: pkger-%
@@ -197,7 +205,7 @@ check test tests:
 		go test -timeout $(TIMEOUT) -v $(ARGS) ./${TYPE}/${TARGET}/... ; \
 	fi
 
- run-%:
+run-%:
 	@if [ -z $(TARGET) ]; then \
 		echo "no  TARGET. example usage: make test TARGET=account"; \
 	else \
@@ -229,7 +237,7 @@ deploy/prod:
     -d '{"ref": "develop", "environment": "production", "payload": { "what": "production deployment to GKE"}}'
 
 # TODO: DOCKER_BUILDKIT=1 docker build --rm
- docker-%:
+docker-%:
 	@if [ -z $(TARGET) ]; then \
 		echo "Building images for all services..."; \
 		for type in $(TYPES); do \
@@ -281,13 +289,13 @@ docker_push:
 		docker push $$image; \
 	done;
 
-kustomize: OVERLAY 	:= e2e
+kustomize: OVERLAY 	:= local
 kustomize: NS 			:= default
 kustomize:
-	# @kustomize build deploy/overlays/${OVERLAY}/ | sed -e "s|\$$(NS)|${NS}|g" -e "s|\$$(IMAGE_VERSION)|${VERSION}|g" | kubectl apply -f -
-	@kustomize build deploy/overlays/${OVERLAY}/ | sed -e "s|\$$(NS)|${NS}|g" 	-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/deploy.yaml
+	# @kustomize build --load_restrictor none config/envs/${OVERLAY}/ | sed -e "s|\$$(NS)|${NS}|g" 		-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" | kubectl apply -f -
+	@kustomize build --load_restrictor none config/envs/${OVERLAY}/ | sed -e "s|\$$(NS)|${NS}|g" 		-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/kubernetes.yaml
 
 build/kustomize: check_dirty
-	@kustomize build deploy/overlays/e2e/ 			 | sed -e "s|\$$(NS)|default|g" -e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/deploy.e2e.yaml
-	@kustomize build deploy/overlays/production/ | sed -e "s|\$$(NS)|default|g" -e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/deploy.production.yaml
-	@kustomize build deploy/overlays/production/ | sed -e "s|\$$(NS)|mynamespace|g" 	-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/deploy.production.mynamespace.yaml
+	@kustomize build --load_restrictor none config/envs/local  		| sed -e "s|\$$(NS)|default|g" 		-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/kubernetes.local.yaml
+	@kustomize build --load_restrictor none config/envs/production/ | sed -e "s|\$$(NS)|default|g" 		-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/kubernetes.production.yaml
+	@kustomize build --load_restrictor none config/envs/production/ | sed -e "s|\$$(NS)|mynamespace|g" 	-e "s|\$$(IMAGE_VERSION)|${VERSION}|g" > build/kubernetes.production.mynamespace.yaml
