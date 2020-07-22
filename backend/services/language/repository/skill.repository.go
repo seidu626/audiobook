@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	entities "github.com/seidu626/audiobook/service/language/proto/entities"
+	entities "github.com/seidu626/audiobook/services/language/proto/entities"
 	log "github.com/sirupsen/logrus"
 )
 

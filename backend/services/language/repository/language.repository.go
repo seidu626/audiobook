@@ -5,10 +5,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	entities "github.com/seidu626/audiobook/backend/language/proto/entities"
+	entities "github.com/seidu626/audiobook/services/language/proto/entities"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // LanguageRepository interface
@@ -23,7 +21,7 @@ type LanguageRepository interface {
 
 // languageRepository struct
 type languageRepository struct {
-	db *mongo.Collection
+	db *gorm.DB
 }
 
 // NewLanguageRepository returns an instance of `LanguageRepository`.

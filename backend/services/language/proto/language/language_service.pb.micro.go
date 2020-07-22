@@ -8,7 +8,7 @@ import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/golang/protobuf/ptypes/wrappers"
-	_ "github.com/seidu626/audiobook/backend/language/proto/entities"
+	_ "github.com/seidu626/audiobook/language/proto/entities"
 	math "math"
 )
 

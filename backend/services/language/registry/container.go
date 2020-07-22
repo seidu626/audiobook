@@ -4,9 +4,9 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/sarulabs/di/v2"
 
-	"github.com/seidu626/audiobook/service/language/handler"
-	entities "github.com/seidu626/audiobook/service/language/proto/entities"
-	"github.com/seidu626/audiobook/service/language/repository"
+	"github.com/seidu626/audiobook/services/language/handler"
+	entities "github.com/seidu626/audiobook/services/language/proto/entities"
+	"github.com/seidu626/audiobook/services/language/repository"
 	"github.com/seidu626/audiobook/shared/config"
 	"github.com/seidu626/audiobook/shared/database"
 	log "github.com/sirupsen/logrus"

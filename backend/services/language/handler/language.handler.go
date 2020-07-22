@@ -11,9 +11,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/thoas/go-funk"
 
-	entities "github.com/seidu626/audiobook/service/language/proto/entities"
-	languagePB "github.com/seidu626/audiobook/service/language/proto/language"
-	"github.com/seidu626/audiobook/service/language/repository"
+	entities "github.com/seidu626/audiobook/services/language/proto/entities"
+	languagePB "github.com/seidu626/audiobook/services/language/proto/language"
+	"github.com/seidu626/audiobook/services/language/repository"
 	myErrors "github.com/seidu626/audiobook/shared/errors"
 )
 

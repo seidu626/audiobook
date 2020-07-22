@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package audiobook.backend.language.entities.v1;
 
-option go_package = "github.com/seidu626/audiobook/backend/language/proto/entities";
+option go_package = "github.com/seidu626/audiobook/language/proto/entities";
 
 // import "shared/proto/common/common.proto";
 import "google/protobuf/timestamp.proto";
