@@ -2,6 +2,8 @@ module github.com/seidu626/audiobook/backend
 
 go 1.14
 
+replace google.golang.org/grpc => google.golang.org/grpc v1.30.0
+
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.4.0
 	github.com/getsentry/sentry-go v0.7.0

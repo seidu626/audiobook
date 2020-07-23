@@ -4,12 +4,12 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/sarulabs/di/v2"
 
+	"github.com/rs/zerolog/log"
 	"github.com/seidu626/audiobook/backend/services/language/handler"
-	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	model "github.com/seidu626/audiobook/backend/services/language/model"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	"github.com/seidu626/audiobook/backend/shared/database"
 	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
-	log "github.com/sirupsen/logrus"
 )
 
 // Container - provide di Container
@@ -67,7 +67,7 @@ func NewContainer(cfg configPB.Configuration) (*Container, error) {
 			Name:  "database",
 			Scope: di.App,
 			Build: func(ctn di.Container) (interface{}, error) {
-				return database.GetDatabaseConnection(cfg.Database, cfg.Log)
+				return database.GetDatabaseConnection(*cfg.Database)
 			},
 			Close: func(obj interface{}) error {
 				return obj.(*gorm.DB).Close()
@@ -99,19 +99,19 @@ func (c *Container) Delete() error {
 
 func buildLanguageRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&entities.LanguageORM{})
+	db.AutoMigrate(&model.Language{})
 	return repository.NewLanguageRepository(db), nil
 }
 
 func buildSkillRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&entities.SkillORM{})
+	db.AutoMigrate(&model.Skill{})
 	return repository.NewSkillRepository(db), nil
 }
 
 func buildWordRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&entities.WordORM{})
+	db.AutoMigrate(&model.Word{})
 	return repository.NewWordRepository(db), nil
 }
 

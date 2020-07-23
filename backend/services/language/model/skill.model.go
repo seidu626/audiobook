@@ -1,10 +1,10 @@
 package model
 
 import (
-	"strings"
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	pb "github.com/seidu626/audiobook/backend/services/language/proto/entities"
 )
 
@@ -63,14 +63,12 @@ func UnmarshalSkill(skill *Skill) *pb.Skill {
 		Title:        skill.Title,
 		UrlTitle:     skill.URLTitle,
 		LessonNumber: skill.LessonNumber,
-		Dependencies: strings.Split(skill.Dependencies, ","),
-		Disabled:     skill.Disabled,
+		Dependencies: &wrappers.StringValue{Value: skill.Dependencies},
 		Locked:       skill.Locked,
-		Type:         skill.Type,
-		Category:     skill.Category,
+		Type:         &wrappers.StringValue{Value: skill.Type},
+		Category:     &wrappers.StringValue{Value: skill.Category},
 		Index:        skill.Index,
-		Description:  skill.Description,
-		//LanguageId:   skill.LanguageID,
+		Description:  &wrappers.StringValue{Value: skill.Description},
 	}
 }
 
@@ -79,7 +77,7 @@ func MarshalSkill(skill *pb.Skill) *Skill {
 	createdAt, _ := ptypes.Timestamp(skill.CreatedAt)
 	updatedAt, _ := ptypes.Timestamp(skill.UpdatedAt)
 	deletedAt, _ := ptypes.Timestamp(skill.DeletedAt)
-
+	// strings.Join(skill.Dependencies.GetValue(), ","),
 	return &Skill{
 		ID:           skill.Id,
 		CreatedAt:    createdAt,
@@ -88,13 +86,12 @@ func MarshalSkill(skill *pb.Skill) *Skill {
 		Title:        skill.Title,
 		URLTitle:     skill.UrlTitle,
 		LessonNumber: skill.LessonNumber,
-		Dependencies: strings.Join(skill.Dependencies, ","),
-		Disabled:     skill.Disabled,
-		Locked:       skill.Locked,
-		Type:         skill.Type,
-		Category:     skill.Category,
-		Index:        skill.Index,
-		Description:  skill.Description,
-		//LanguageID:   skill.LanguageId,
+		Dependencies: skill.Dependencies.Value,
+		//		Disabled:     skill.Disabled,
+		Locked:      skill.Locked,
+		Type:        skill.Type.GetValue(),
+		Category:    skill.Category.GetValue(),
+		Index:       skill.Index,
+		Description: skill.Description.GetValue(),
 	}
 }

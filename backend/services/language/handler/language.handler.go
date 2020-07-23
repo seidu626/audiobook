@@ -3,15 +3,13 @@ package handler
 import (
 	"context"
 
-	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
+	"github.com/rs/zerolog/log"
 	uuid "github.com/satori/go.uuid"
-	log "github.com/sirupsen/logrus"
-	"github.com/thoas/go-funk"
 
-	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	model "github.com/seidu626/audiobook/backend/services/language/model"
 	languagePB "github.com/seidu626/audiobook/backend/services/language/proto/language"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
@@ -32,37 +30,32 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 }
 
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
-	log.Info("Received LanguageHandler.Exist request")
-	model := entities.LanguageORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
+	log.Info().Msg("Received LanguageHandler.Exist request")
+	model := model.Language{}
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 
 	exists := h.languageRepository.Exist(&model)
-	log.Infof("language exists? %t", exists)
+	log.Info().Msgf("language exists? %t", exists)
 	rsp.Result = exists
 	return nil
 }
 
 func (h *languageHandler) List(ctx context.Context, req *languagePB.ListRequest, rsp *languagePB.ListResponse) error {
-	log.Info("Received LanguageHandler.List request")
+	log.Info().Msg("Received LanguageHandler.List request")
 
 	total, languages, err := h.languageRepository.List(req.Limit.GetValue(), req.Page.GetValue(), req.Sort.GetValue())
 	if err != nil {
 		return errors.NotFound("micro.service.language.language.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	results := funk.Map(languages, func(language *entities.LanguageORM) *entities.Language {
-		tmpModel, _ := language.ToPB(ctx)
-		return &tmpModel
-	}).([]*entities.Language)
-
-	rsp.Results = results
+	rsp.Results = model.UnmarshalLanguageCollection(languages)
 	return nil
 }
 
 func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, rsp *languagePB.GetResponse) error {
-	log.Info("Received LanguageHandler.Get request")
+	log.Info().Msg("Received LanguageHandler.Get request")
 
 	id := req.Id.GetValue()
 	if id == "" {
@@ -70,7 +63,7 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 	}
 	language, err := h.languageRepository.Get(id)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if err == g.ErrRecordNotFound {
 			rsp.Result = nil
 			return nil
 		}
@@ -84,9 +77,9 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 }
 
 func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
-	log.Info("Received LanguageHandler.Create request")
+	log.Info().Msg("Received LanguageHandler.Create request")
 
-	model := entities.LanguageORM{}
+	model := model.Language{}
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -99,21 +92,21 @@ func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequ
 }
 
 func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequest, rsp *languagePB.UpdateResponse) error {
-	log.Info("Received LanguageHandler.Update request")
+	log.Info().Msg("Received LanguageHandler.Update request")
 	// Identify the language
 	acc, ok := auth.AccountFromContext(ctx)
 	if !ok {
 		return errors.Unauthorized("micro.service.language.language.update", "A valid auth token is required")
 	}
-	log.Infof("Caller Account: %v", acc)
+	log.Info().Msgf("Caller Account: %v", acc)
 
 	id := req.Id.GetValue()
 	if id == "" {
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := entities.LanguageORM{}
-	model.Id = uuid.FromStringOrNil(id)
+	model := model.Language{}
+	model.ID = uuid.FromStringOrNil(id).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -126,15 +119,15 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 }
 
 func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequest, rsp *languagePB.DeleteResponse) error {
-	log.Info("Received LanguageHandler.Delete request")
+	log.Info().Msg("Received LanguageHandler.Delete request")
 
 	id := req.Id.GetValue()
 	if id == "" {
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := entities.LanguageORM{}
-	model.Id = uuid.FromStringOrNil(id)
+	model := model.Language{}
+	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.languageRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

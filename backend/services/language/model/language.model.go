@@ -16,7 +16,7 @@ type Language struct {
 	Name         string    `json:"name"`
 	Abbreviation string    `json:"abbreviation"`
 	FlagSrc      string    `json:"flagSrc"`
-	Words        []*Word   `gorm:"foreignkey:LanguageID" json:"words"`
+	Skills       []*Skill  `gorm:"foreignkey:LanguageID" json:"skills"`
 }
 
 // Languages language collection
@@ -53,7 +53,7 @@ func UnmarshalLanguage(language *Language) *pb.Language {
 		Name:         language.Name,
 		Abbreviation: language.Abbreviation,
 		FlagSrc:      language.FlagSrc,
-		Words:        UnmarshalWordCollection(language.Words),
+		Skills:       UnmarshalSkillCollection(language.Skills),
 	}
 }
 
@@ -70,6 +70,6 @@ func MarshalLanguage(language *pb.Language) *Language {
 		Name:         language.Name,
 		Abbreviation: language.Abbreviation,
 		FlagSrc:      language.FlagSrc,
-		Words:        MarshalWordCollection(language.Words),
+		Skills:       MarshalSkillCollection(language.Skills),
 	}
 }
