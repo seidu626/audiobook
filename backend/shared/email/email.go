@@ -9,8 +9,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	myErrors "github.com/seidu626/audiobook/shared/errors"
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
+	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
 )
 
 var emailTmpl *template.Template

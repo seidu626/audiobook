@@ -6,8 +6,8 @@ import (
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
-	_ "github.com/seidu626/audiobook/shared/logger"
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
+	_ "github.com/seidu626/audiobook/backend/shared/logger"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
 )
 
 func TestDatabase(t *testing.T) {

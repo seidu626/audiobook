@@ -6,13 +6,13 @@ import (
 	"github.com/micro/go-micro/v2/server"
 	"github.com/rs/zerolog/log"
 
-	transactionPB "github.com/seidu626/audiobook/services/recorder/proto/transaction"
-	"github.com/seidu626/audiobook/services/recorder/registry"
-	"github.com/seidu626/audiobook/shared/config"
-	"github.com/seidu626/audiobook/shared/constants"
-	myMicro "github.com/seidu626/audiobook/shared/util/micro"
-	logWrapper "github.com/seidu626/audiobook/shared/wrapper/log"
-	validatorWrapper "github.com/seidu626/audiobook/shared/wrapper/validator"
+	transactionPB "github.com/seidu626/audiobook/backend/services/recorder/proto/transaction"
+	"github.com/seidu626/audiobook/backend/services/recorder/registry"
+	"github.com/seidu626/audiobook/backend/shared/config"
+	"github.com/seidu626/audiobook/backend/shared/constants"
+	myMicro "github.com/seidu626/audiobook/backend/shared/util/micro"
+	logWrapper "github.com/seidu626/audiobook/backend/shared/wrapper/log"
+	validatorWrapper "github.com/seidu626/audiobook/backend/shared/wrapper/validator"
 )
 
 func main() {

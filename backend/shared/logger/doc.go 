@@ -1,4 +1,4 @@
 // logger setup from micro-strter-kit
-// import "github.com/seidu626/audiobook/shared/logger" to `main.go` and all test files.
+// import "github.com/seidu626/audiobook/backend/shared/logger" to `main.go` and all test files.
 // set log level and format in config.yaml
 package logger

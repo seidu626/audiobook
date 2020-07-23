@@ -7,8 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/rs/zerolog/log"
 
-	"github.com/seidu626/audiobook/shared/logger/gormlog"
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
+	"github.com/seidu626/audiobook/backend/shared/logger/gormlog"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
 )
 
 // GetDatabaseConnection return (gorm.DB or error)

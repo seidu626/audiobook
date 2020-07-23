@@ -14,9 +14,9 @@ import (
 
 	mLogger "github.com/micro/go-micro/v2/logger" // TODO: remove
 
-	"github.com/seidu626/audiobook/shared/logger/gcp"
-	zeroToGrpcAdopter "github.com/seidu626/audiobook/shared/logger/grpc"
-	zeroToMicroAdopter "github.com/seidu626/audiobook/shared/logger/micro"
+	"github.com/seidu626/audiobook/backend/shared/logger/gcp"
+	zeroToGrpcAdopter "github.com/seidu626/audiobook/backend/shared/logger/grpc"
+	zeroToMicroAdopter "github.com/seidu626/audiobook/backend/shared/logger/micro"
 )
 
 var (

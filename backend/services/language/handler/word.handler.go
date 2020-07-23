@@ -11,10 +11,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/thoas/go-funk"
 
-	entities "github.com/seidu626/audiobook/services/language/proto/entities"
-	wordPB "github.com/seidu626/audiobook/services/language/proto/word"
-	"github.com/seidu626/audiobook/services/language/repository"
-	myErrors "github.com/seidu626/audiobook/shared/errors"
+	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	wordPB "github.com/seidu626/audiobook/backend/services/language/proto/word"
+	"github.com/seidu626/audiobook/backend/services/language/repository"
+	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
 )
 
 // WordHandler struct

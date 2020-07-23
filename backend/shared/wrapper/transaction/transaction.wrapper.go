@@ -9,7 +9,7 @@ import (
 	"github.com/micro/go-micro/v2/server"
 	"github.com/rs/zerolog/log"
 
-	transactionPB "github.com/seidu626/audiobook/services/recorder/proto/transaction"
+	transactionPB "github.com/seidu626/audiobook/backend/services/recorder/proto/transaction"
 )
 
 func publish(ctx context.Context, publisher micro.Event, req, rsp proto.Message) (err error) {

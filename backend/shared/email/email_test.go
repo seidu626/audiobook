@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/backend/shared/config"
 )
 
 func TestSendEmail_Send(t *testing.T) {

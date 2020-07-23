@@ -6,7 +6,7 @@ import (
 
 	"github.com/micro/go-micro/v2/server"
 
-	"github.com/seidu626/audiobook/shared/errors"
+	"github.com/seidu626/audiobook/backend/shared/errors"
 )
 
 type Validator interface {

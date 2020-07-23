@@ -4,11 +4,11 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/sarulabs/di/v2"
 
-	"github.com/seidu626/audiobook/services/language/handler"
-	entities "github.com/seidu626/audiobook/services/language/proto/entities"
-	"github.com/seidu626/audiobook/services/language/repository"
-	"github.com/seidu626/audiobook/shared/database"
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
+	"github.com/seidu626/audiobook/backend/services/language/handler"
+	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	"github.com/seidu626/audiobook/backend/services/language/repository"
+	"github.com/seidu626/audiobook/backend/shared/database"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
 	log "github.com/sirupsen/logrus"
 )
 

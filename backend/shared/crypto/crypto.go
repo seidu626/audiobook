@@ -6,7 +6,7 @@ import (
 	"crypto/rand"
 	"io"
 
-	"github.com/seidu626/audiobook/shared/util"
+	"github.com/seidu626/audiobook/backend/shared/util"
 )
 
 // AesEncrypt takes in a string, a key and returns encrypted string

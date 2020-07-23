@@ -7,8 +7,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/seidu626/audiobook/shared/logger"
-	"github.com/seidu626/audiobook/shared/logger/gormlog"
+	"github.com/seidu626/audiobook/backend/shared/logger"
+	"github.com/seidu626/audiobook/backend/shared/logger/gormlog"
 )
 
 func ExampleLogger() {

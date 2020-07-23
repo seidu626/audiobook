@@ -6,9 +6,9 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/rs/zerolog/log"
 
-	transactionPB "github.com/seidu626/audiobook/services/recorder/proto/transaction"
-	"github.com/seidu626/audiobook/services/recorder/repository"
-	myErrors "github.com/seidu626/audiobook/shared/errors"
+	transactionPB "github.com/seidu626/audiobook/backend/services/recorder/proto/transaction"
+	"github.com/seidu626/audiobook/backend/services/recorder/repository"
+	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
 )
 
 type recorderHandler struct {

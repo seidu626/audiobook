@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package audiobook.language.word.v1;
 
-option go_package = "github.com/seidu626/audiobook/services/language/proto/word";
+option go_package = "github.com/seidu626/audiobook/backend/services/language/proto/word";
 import "google/protobuf/wrappers.proto";
 // import "shared/proto/common/common.proto";
 import "services/language/proto/entities/entities.proto";

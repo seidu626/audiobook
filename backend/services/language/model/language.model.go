@@ -4,7 +4,7 @@ import (
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
-	pb "github.com/seidu626/audiobook/language/proto/entities"
+	pb "github.com/seidu626/audiobook/backend/services/language/proto/entities"
 )
 
 // Language model

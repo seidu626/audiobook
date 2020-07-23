@@ -14,8 +14,8 @@ import (
 	"github.com/xmlking/configor"
 	"google.golang.org/grpc/resolver"
 
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
-	uTLS "github.com/seidu626/audiobook/shared/util/tls"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
+	uTLS "github.com/seidu626/audiobook/backend/shared/util/tls"
 )
 
 var (

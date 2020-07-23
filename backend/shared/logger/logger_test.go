@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	// bootstrap logger
-	"github.com/seidu626/audiobook/shared/logger"
+	"github.com/seidu626/audiobook/backend/shared/logger"
 )
 
 func TestLogger(t *testing.T) {

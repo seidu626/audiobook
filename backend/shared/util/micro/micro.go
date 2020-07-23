@@ -6,7 +6,7 @@ import (
 	gs "github.com/micro/go-micro/v2/server/grpc"
 	"github.com/rs/zerolog/log"
 
-	"github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/backend/shared/config"
 )
 
 func WithTLS() micro.Option {

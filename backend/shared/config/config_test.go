@@ -7,7 +7,7 @@ import (
 
 	"google.golang.org/grpc/resolver"
 
-	"github.com/seidu626/audiobook/shared/config"
+	"github.com/seidu626/audiobook/backend/shared/config"
 )
 
 // CONFIGOR_DEBUG_MODE=true go test -v ./shared/config/... -count=1

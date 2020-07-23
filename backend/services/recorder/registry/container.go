@@ -6,10 +6,10 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/sarulabs/di/v2"
 
-	"github.com/seidu626/audiobook/services/recorder/handler"
-	"github.com/seidu626/audiobook/services/recorder/repository"
-	"github.com/seidu626/audiobook/services/recorder/subscriber"
-	configPB "github.com/seidu626/audiobook/shared/proto/config"
+	"github.com/seidu626/audiobook/backend/services/recorder/handler"
+	"github.com/seidu626/audiobook/backend/services/recorder/repository"
+	"github.com/seidu626/audiobook/backend/services/recorder/subscriber"
+	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
 )
 
 // Container - provide di Container
