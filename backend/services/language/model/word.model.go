@@ -9,13 +9,13 @@ import (
 
 // Word model
 type Word struct {
-	ID         string    `gorm:"primary_key;column:Id;type:STRING;" json:"id" db:"Id" protobuf:"string,0,opt,name=id"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	DeletedAt  time.Time `json:"deleted_at"`
-	Content    string    `json:"content"`
-	AudioSrc   string    `json:"audio_src"`
-	LanguageID string    `json:"language_id"`
+	ID        string    `gorm:"primary_key;column:Id;type:STRING;" json:"id" db:"Id" protobuf:"string,0,opt,name=id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
+	Content   string    `json:"content"`
+	AudioSrc  string    `json:"audio_src"`
+	skillID   string    `json:"skillId"`
 }
 
 // Words word collection
@@ -51,7 +51,7 @@ func UnmarshalWord(word *Word) *pb.Word {
 		DeletedAt: deletedAt,
 		Content:   word.Content,
 		AudioSrc:  word.AudioSrc,
-		//LanguageId: word.LanguageID,
+		skill_id:  word.skillID,
 	}
 }
 
@@ -67,6 +67,6 @@ func MarshalWord(word *pb.Word) *Word {
 		DeletedAt: deletedAt,
 		Content:   word.Content,
 		AudioSrc:  word.AudioSrc,
-		//LanguageID: word.LanguageId,
+		skillID:   word.skill_Id,
 	}
 }

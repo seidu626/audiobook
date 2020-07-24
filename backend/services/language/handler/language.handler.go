@@ -3,13 +3,14 @@ package handler
 import (
 	"context"
 
+	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	"github.com/rs/zerolog/log"
 	uuid "github.com/satori/go.uuid"
 
-	model "github.com/seidu626/audiobook/backend/services/language/model"
+	models "github.com/seidu626/audiobook/backend/services/language/model"
 	languagePB "github.com/seidu626/audiobook/backend/services/language/proto/language"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
@@ -31,7 +32,7 @@ func NewLanguageHandler(repo repository.LanguageRepository, eve micro.Event) lan
 
 func (h *languageHandler) Exist(ctx context.Context, req *languagePB.ExistRequest, rsp *languagePB.ExistResponse) error {
 	log.Info().Msg("Received LanguageHandler.Exist request")
-	model := model.Language{}
+	model := models.Language{}
 	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
@@ -50,7 +51,7 @@ func (h *languageHandler) List(ctx context.Context, req *languagePB.ListRequest,
 		return errors.NotFound("micro.service.language.language.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	rsp.Results = model.UnmarshalLanguageCollection(languages)
+	rsp.Results = models.UnmarshalLanguageCollection(languages)
 	return nil
 }
 
@@ -63,15 +64,14 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 	}
 	language, err := h.languageRepository.Get(id)
 	if err != nil {
-		if err == g.ErrRecordNotFound {
+		if err == gorm.ErrRecordNotFound {
 			rsp.Result = nil
 			return nil
 		}
 		return myErrors.AppError(myErrors.DBE, err)
 	}
-	result, _ := language.ToPB(ctx)
 
-	rsp.Result = &result
+	rsp.Result = models.UnmarshalLanguage(language)
 
 	return nil
 }
@@ -79,7 +79,7 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
 	log.Info().Msg("Received LanguageHandler.Create request")
 
-	model := model.Language{}
+	model := models.Language{}
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()
@@ -105,7 +105,7 @@ func (h *languageHandler) Update(ctx context.Context, req *languagePB.UpdateRequ
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := model.Language{}
+	model := models.Language{}
 	model.ID = uuid.FromStringOrNil(id).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
@@ -126,7 +126,7 @@ func (h *languageHandler) Delete(ctx context.Context, req *languagePB.DeleteRequ
 		return myErrors.ValidationError("micro.service.language.language.update", "validation error: Missing Id")
 	}
 
-	model := model.Language{}
+	model := models.Language{}
 	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.languageRepository.Delete(&model); err != nil {

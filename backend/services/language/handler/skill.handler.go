@@ -9,12 +9,11 @@ import (
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
-	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	models "github.com/seidu626/audiobook/backend/services/language/model"
 	skillPB "github.com/seidu626/audiobook/backend/services/language/proto/skill"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/thoas/go-funk"
 )
 
 // SkillHandler struct
@@ -33,8 +32,8 @@ func NewSkillHandler(repo repository.SkillRepository, eve micro.Event) skillPB.S
 
 func (h *skillHandler) Exist(ctx context.Context, req *skillPB.ExistRequest, rsp *skillPB.ExistResponse) error {
 	log.Info("Received SkillHandler.Exist request")
-	model := entities.SkillORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
+	model := models.Skill{}
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Title = req.Title.GetValue()
 
 	exists := h.skillRepository.Exist(&model)
@@ -50,12 +49,8 @@ func (h *skillHandler) List(ctx context.Context, req *skillPB.ListRequest, rsp *
 		return errors.NotFound("micro.service.skill.skill.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	results := funk.Map(skills, func(skill *entities.SkillORM) *entities.Skill {
-		tmpModel, _ := skill.ToPB(ctx)
-		return &tmpModel
-	}).([]*entities.Skill)
 
-	rsp.Results = results
+	rsp.Results = models.UnmarshalSkillCollection(skills)
 	return nil
 }
 
@@ -75,8 +70,7 @@ func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *sk
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 
-	result, _ := skill.ToPB(ctx)
-	rsp.Result = &result
+	rsp.Result = models.UnmarshalSkill(skill)
 
 	return nil
 }
@@ -92,20 +86,20 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 	skillType := req.Type.GetValue()
 	category := req.Category.GetValue()
 	description := req.Description.GetValue()
+	languageID := uuid.FromStringOrNil(req.LanguageId.GetValue()).String()
 
-	model := entities.SkillORM{}
+	model := models.Skill{}
 	model.Title = req.Title.GetValue()
-	model.UrlTitle = req.UrlTitle.GetValue()
+	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = &dependencies
+	model.Dependencies = dependencies
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
-	model.Type = &skillType
-	model.Category = &category
+	model.Type = skillType
+	model.Category = category
 	model.Index = int32(req.Index)
-	model.Description = &description
-	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
-	model.LanguageId = &languageId
+	model.Description = description
+	model.LanguageID = languageID
 
 	if err := h.skillRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -137,21 +131,21 @@ func (h *skillHandler) Update(ctx context.Context, req *skillPB.UpdateRequest, r
 	skillType := req.Type.GetValue()
 	category := req.Category.GetValue()
 	description := req.Description.GetValue()
+	languageID := uuid.FromStringOrNil(req.LanguageId.GetValue()).String()
 
-	model := entities.SkillORM{}
-	model.Id = uuid.FromStringOrNil(id)
+	model := models.Skill{}
+	model.ID = uuid.FromStringOrNil(id).String()
 	model.Title = req.Title.GetValue()
-	model.UrlTitle = req.UrlTitle.GetValue()
+	model.URLTitle = req.UrlTitle.GetValue()
 	model.LessonNumber = req.LessonNumber
-	model.Dependencies = &dependencies
+	model.Dependencies = dependencies
 	model.Disabled = req.Disabled
 	model.Locked = req.Locked
-	model.Type = &skillType
-	model.Category = &category
+	model.Type = skillType
+	model.Category = category
 	model.Index = int32(req.Index)
-	model.Description = &description
-	languageId := uuid.FromStringOrNil(req.LanguageId.GetValue())
-	model.LanguageId = &languageId
+	model.Description = description
+	model.LanguageID = languageID
 
 	if err := h.skillRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -168,8 +162,8 @@ func (h *skillHandler) Delete(ctx context.Context, req *skillPB.DeleteRequest, r
 		return myErrors.ValidationError("micro.service.skill.skill.update", "validation error: Missing Id")
 	}
 
-	model := entities.SkillORM{}
-	model.Id = uuid.FromStringOrNil(id)
+	model := models.Skill{}
+	model.ID = uuid.FromStringOrNil(id).String()
 
 	if err := h.skillRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

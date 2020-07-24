@@ -350,6 +350,8 @@ func (m *Word) Validate() error {
 
 	// no validation rules for AudioSrc
 
+	// no validation rules for Skill_Id
+
 	if v, ok := interface{}(m.GetSkill()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return WordValidationError{

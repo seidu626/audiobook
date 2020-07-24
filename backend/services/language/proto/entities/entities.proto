@@ -47,7 +47,8 @@ message Word {
   google.protobuf.Timestamp deleted_at = 4 ;
   string content = 5;
   string audio_src = 6;
-  audiobook.language.entities.v1.Skill Skill = 7;
+  string skill_Id = 7;
+  audiobook.language.entities.v1.Skill Skill = 8;
 }
 
 // Language Entity

@@ -3,15 +3,14 @@ package handler
 import (
 	"context"
 
-	"github.com/jinzhu/gorm"
+	"github.com/jinzhu/g"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
-	"github.com/thoas/go-funk"
 
-	entities "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	models "github.com/seidu626/audiobook/backend/services/language/model"
 	wordPB "github.com/seidu626/audiobook/backend/services/language/proto/word"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	myErrors "github.com/seidu626/audiobook/backend/shared/errors"
@@ -33,8 +32,8 @@ func NewWordHandler(repo repository.WordRepository, eve micro.Event) wordPB.Word
 
 func (h *wordHandler) Exist(ctx context.Context, req *wordPB.ExistRequest, rsp *wordPB.ExistResponse) error {
 	log.Info("Received WordHandler.Exist request")
-	model := entities.WordORM{}
-	model.Id = uuid.FromStringOrNil(req.Id.GetValue())
+	model := models.Word{}
+	model.ID = uuid.FromStringOrNil(req.Id.GetValue()).String()
 	model.Content = req.Content.GetValue()
 
 	exists := h.wordRepository.Exist(&model)
@@ -50,12 +49,8 @@ func (h *wordHandler) List(ctx context.Context, req *wordPB.ListRequest, rsp *wo
 		return errors.NotFound("micro.service.word.word.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	results := funk.Map(words, func(word *entities.WordORM) *entities.Word {
-		tmpModel, _ := word.ToPB(ctx)
-		return &tmpModel
-	}).([]*entities.Word)
 
-	rsp.Results = results
+	rsp.Results = models.UnmarshalWordCollection(words)
 	return nil
 }
 
@@ -68,13 +63,13 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 	}
 	word, err := h.wordRepository.Get(id)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if err == g.ErrRecordNotFound {
 			rsp.Result = nil
 			return nil
 		}
 		return myErrors.AppError(myErrors.DBE, err)
 	}
-	result, _ := word.ToPB(ctx)
+	result, _ := models.UnmarshalWord(word)
 
 	rsp.Result = &result
 
@@ -84,11 +79,11 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp *wordPB.CreateResponse) error {
 	log.Info("Received WordHandler.Create request")
 
-	model := entities.WordORM{}
+	model := models.Word{}
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	skillId := uuid.FromStringOrNil(req.SkillId)
-	model.SkillId = &skillId
+
+	model.skillID = req.SkillId
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -111,12 +106,11 @@ func (h *wordHandler) Update(ctx context.Context, req *wordPB.UpdateRequest, rsp
 		return myErrors.ValidationError("micro.service.word.word.update", "validation error: Missing Id")
 	}
 
-	model := entities.WordORM{}
-	model.Id = uuid.FromStringOrNil(id)
+	model := models.Word{}
+	model.ID = id
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
-	skillId := uuid.FromStringOrNil(req.SkillId)
-	model.SkillId = &skillId
+	model.SkillID = req.SkillId
 
 	if err := h.wordRepository.Update(id, &model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -133,7 +127,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp
 		return myErrors.ValidationError("micro.service.word.word.update", "validation error: Missing Id")
 	}
 
-	model := entities.WordORM{}
+	model := models.Word{}
 	model.Id = uuid.FromStringOrNil(id)
 
 	if err := h.wordRepository.Delete(&model); err != nil {

@@ -5,18 +5,18 @@ import (
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
-	model "github.com/seidu626/audiobook/backend/services/langauge/model"
+	models "github.com/seidu626/audiobook/backend/services/language/model"
 	log "github.com/sirupsen/logrus"
 )
 
 // SkillRepository interface
 type SkillRepository interface {
-	Exist(model *model.Skill) bool
-	List(limit, page uint32, sort string) (total uint32, skills []*model.Skill, err error)
-	Get(id string) (*model.Skill, error)
-	Create(model *model.Skill) error
-	Update(id string, model *model.Skill) error
-	Delete(model *model.Skill) error
+	Exist(model *models.Skill) bool
+	List(limit, page uint32, sort string) (total uint32, skills []*models.Skill, err error)
+	Get(id string) (*models.Skill, error)
+	Create(model *models.Skill) error
+	Update(id string, model *models.Skill) error
+	Delete(model *models.Skill) error
 }
 
 // skillRepository struct
@@ -32,23 +32,23 @@ func NewSkillRepository(db *gorm.DB) SkillRepository {
 }
 
 // Exist
-func (repo *skillRepository) Exist(model *model.Skill) bool {
+func (repo *skillRepository) Exist(model *models.Skill) bool {
 	log.Infof("Received skillRepository.Exist request %v", *model)
 	var count int
 	if model.Title != "" && len(model.Title) > 0 {
-		repo.db.Model(&model.Skill{}).Where("name = ?", model.Title).Count(&count)
+		repo.db.Model(&models.Skill{}).Where("name = ?", model.Title).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
-	if len(model.Id) > 0 {
-		repo.db.Model(&model.Skill{}).Where("id = ?", model.Id).Count(&count)
+	if len(model.ID) > 0 {
+		repo.db.Model(&models.Skill{}).Where("id = ?", model.ID).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
-	if model.UrlTitle != "" {
-		repo.db.Model(&model.Skill{}).Where("code = ?", model.UrlTitle).Count(&count)
+	if model.URLTitle != "" {
+		repo.db.Model(&models.Skill{}).Where("code = ?", model.URLTitle).Count(&count)
 		if count > 0 {
 			return true
 		}
@@ -57,7 +57,7 @@ func (repo *skillRepository) Exist(model *model.Skill) bool {
 }
 
 // List
-func (repo *skillRepository) List(limit, page uint32, sort string) (total uint32, skills []*model.Skill, err error) {
+func (repo *skillRepository) List(limit, page uint32, sort string) (total uint32, skills []*models.Skill, err error) {
 	db := repo.db
 
 	if limit == 0 {
@@ -82,12 +82,12 @@ func (repo *skillRepository) List(limit, page uint32, sort string) (total uint32
 }
 
 // Find by Id
-func (repo *skillRepository) Get(id string) (skill *model.Skill, err error) {
+func (repo *skillRepository) Get(id string) (skill *models.Skill, err error) {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return
 	}
-	skill = &model.Skill{Id: u2}
+	skill = &models.Skill{ID: u2.String()}
 	// enable auto preloading for `Profile`
 	if err = repo.db.Set("gorm:auto_preload", true).First(skill).Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.WithError(err).Error("Error in SkillRepository.Get")
@@ -96,7 +96,7 @@ func (repo *skillRepository) Get(id string) (skill *model.Skill, err error) {
 }
 
 // Create
-func (repo *skillRepository) Create(model *model.Skill) error {
+func (repo *skillRepository) Create(model *models.Skill) error {
 	if exist := repo.Exist(model); exist {
 		return errors.New("skill already exist")
 	}
@@ -109,13 +109,13 @@ func (repo *skillRepository) Create(model *model.Skill) error {
 }
 
 // Update TODO: Translation
-func (repo *skillRepository) Update(id string, model *model.Skill) error {
+func (repo *skillRepository) Update(id string, model *models.Skill) error {
 	u2, err := uuid.FromString(id)
 	if err != nil {
 		return err
 	}
-	skill := &model.Skill{
-		Id: u2,
+	skill := &models.Skill{
+		ID: u2.String(),
 	}
 	// result := repo.db.Set("gorm:association_autoupdate", false).Save(model)
 	result := repo.db.Model(skill).Updates(model)
@@ -131,7 +131,7 @@ func (repo *skillRepository) Update(id string, model *model.Skill) error {
 }
 
 // Delete
-func (repo *skillRepository) Delete(model *model.Skill) error {
+func (repo *skillRepository) Delete(model *models.Skill) error {
 	result := repo.db.Delete(model)
 	if err := result.Error; err != nil {
 		log.WithError(err).Error("Error in SkillRepository.Delete")
