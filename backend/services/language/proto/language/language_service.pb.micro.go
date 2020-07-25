@@ -9,6 +9,7 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/golang/protobuf/ptypes/wrappers"
 	_ "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	math "math"
 )
 

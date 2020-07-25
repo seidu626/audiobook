@@ -2,11 +2,19 @@ module github.com/seidu626/audiobook/backend
 
 go 1.14
 
+require google.golang.org/grpc v1.26.0
+
+replace github.com/coreos/go-systemd => github.com/coreos/go-systemd/v22 v22.0.0
+
 require (
+	github.com/antihax/optional v1.0.0 // indirect
+	github.com/envoyproxy/go-control-plane v0.9.4 // indirect
 	github.com/envoyproxy/protoc-gen-validate v0.4.0
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.4.2
+	github.com/google/go-cmp v0.5.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.14.5 // indirect
 	github.com/infobloxopen/atlas-app-toolkit v0.22.0
 	github.com/jinzhu/gorm v1.9.15
 	github.com/markbates/pkger v0.17.0
@@ -17,9 +25,11 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
-	github.com/thoas/go-funk v0.7.0
 	github.com/xmlking/configor v0.2.1
-	google.golang.org/grpc v1.30.0
-	google.golang.org/grpc/examples v0.0.0-20200722213622-a1ace9105a34 // indirect
-	google.golang.org/protobuf v1.25.0
+	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
+	golang.org/x/sys v0.0.0-20200724161237-0e2f3a69832c // indirect
+	golang.org/x/text v0.3.3 // indirect
+	google.golang.org/genproto v0.0.0-20191216164720-4f79533eabd1
+	google.golang.org/protobuf v1.23.0
 )

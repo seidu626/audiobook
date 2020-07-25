@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/jinzhu/g"
+	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/auth"
 	"github.com/micro/go-micro/v2/errors"
@@ -63,15 +63,14 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 	}
 	word, err := h.wordRepository.Get(id)
 	if err != nil {
-		if err == g.ErrRecordNotFound {
+		if err == gorm.ErrRecordNotFound {
 			rsp.Result = nil
 			return nil
 		}
 		return myErrors.AppError(myErrors.DBE, err)
 	}
-	result, _ := models.UnmarshalWord(word)
 
-	rsp.Result = &result
+	rsp.Result = models.UnmarshalWord(word)
 
 	return nil
 }
@@ -83,7 +82,7 @@ func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
 
-	model.skillID = req.SkillId
+	model.SkillID = req.SkillId
 
 	if err := h.wordRepository.Create(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
@@ -128,7 +127,7 @@ func (h *wordHandler) Delete(ctx context.Context, req *wordPB.DeleteRequest, rsp
 	}
 
 	model := models.Word{}
-	model.Id = uuid.FromStringOrNil(id)
+	model.ID = id
 
 	if err := h.wordRepository.Delete(&model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)

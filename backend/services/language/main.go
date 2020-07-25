@@ -58,7 +58,7 @@ func main() {
 	}
 
 	service := micro.NewService(
-		micro.Name(constants.ACCOUNT_SERVICE),
+		micro.Name(constants.LANGUAGE_SERVICE),
 		micro.Version(config.Version),
 		myMicro.WithTLS(),
 		// Wrappers are applied in reverse order so the last is executed first.

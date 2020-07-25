@@ -15,7 +15,7 @@ type Word struct {
 	DeletedAt time.Time `json:"deleted_at"`
 	Content   string    `json:"content"`
 	AudioSrc  string    `json:"audio_src"`
-	skillID   string    `json:"skillId"`
+	SkillID   string    `json:"skillId"`
 }
 
 // Words word collection
@@ -51,7 +51,7 @@ func UnmarshalWord(word *Word) *pb.Word {
 		DeletedAt: deletedAt,
 		Content:   word.Content,
 		AudioSrc:  word.AudioSrc,
-		skill_id:  word.skillID,
+		Skill_Id:  word.SkillID,
 	}
 }
 
@@ -67,6 +67,6 @@ func MarshalWord(word *pb.Word) *Word {
 		DeletedAt: deletedAt,
 		Content:   word.Content,
 		AudioSrc:  word.AudioSrc,
-		skillID:   word.skill_Id,
+		SkillID:   word.Skill_Id,
 	}
 }

@@ -8,6 +8,8 @@ GITHUB_RELEASES_UI_URL 		:= https://github.com/$(GITHUB_REPO_OWNER)/$(GITHUB_REP
 GITHUB_RELEASES_API_URL 	:= https://api.github.com/repos/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/releases
 GITHUB_RELEASE_ASSET_URL	:= https://uploads.github.com/repos/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/releases
 GITHUB_DEPLOY_API_URL			:= https://api.github.com/repos/$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)/deployments
+GOOGLE_APIS					:=	github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
+GRPC_GATEWAY				:= 	github.com/grpc-ecosystem/grpc-gateway
 DOCKER_REGISTRY 					:= docker.pkg.github.com
 # DOCKER_REGISTRY 					:= us.gcr.io
 DOCKER_CONTEXT_PATH 			:= $(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)
@@ -54,13 +56,19 @@ BUILD_FLAGS = $(shell govvv -flags -version $(VERSION) -pkg $(VERSION_PACKAGE))
 
 all: build
 
-tools:
+tools:  ## install dependencies
 	@echo "==> Installing dev tools"
 	# go install github.com/ahmetb/govvv
 	# go install github.com/markbates/pkger/cmd/pkger
 	# GO111MODULE=off go get github.com/golangci/golangci-lint/cmd/golangci-lint
 	# GO111MODULE=on go get github.com/bufbuild/buf/cmd/buf
 	# GO111MODULE=on go get github.com/rvflash/goup
+	@go get -u github.com/stevvooe/protobuild
+	@go get -u github.com/favadi/protoc-go-inject-tag
+	@go get -d $(GRPC_GATEWAY)/...
+	@cd $(GOPATH)/src/$(GRPC_GATEWAY)/protoc-gen-grpc-gateway && go install
+	@cd $(GOPATH)/src/$(GRPC_GATEWAY)/protoc-gen-swagger && go install
+
 
 check_dirty:
 ifdef GIT_DIRTY
@@ -89,8 +97,10 @@ proto-%:
 			for f in $$d/**/proto/**/*.proto; do \
 				protoc --proto_path=.:${GOPATH}/src \
 				-I ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate \
+				-I $(GOPATH)/src/$(GOOGLE_APIS) \
 				--go_out=paths=source_relative:. \
 				--micro_out=paths=source_relative:. \
+				--swagger_out=logtostderr=true:. \
 				--validate_out=lang=go,paths=source_relative:. $$f; \
 				echo ✓ compiled: $$f; \
 			done \
@@ -99,7 +109,9 @@ proto-%:
 		for f in ${TYPE}/${TARGET}/proto/**/*.proto; do \
 			protoc --proto_path=.:${GOPATH}/src \
 			-I ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate \
+			-I $(GOPATH)/src/$(GOOGLE_APIS) \
 			--go_out=paths=source_relative:. \
+			--swagger_out=logtostderr=true:. \
 			--micro_out=paths=source_relative:. \
 			--validate_out=lang=go,paths=source_relative:. $$f; \
 			echo ✓ compiled: $$f; \

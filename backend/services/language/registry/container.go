@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/seidu626/audiobook/backend/services/language/handler"
-	model "github.com/seidu626/audiobook/backend/services/language/model"
+	models "github.com/seidu626/audiobook/backend/services/language/model"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
 	"github.com/seidu626/audiobook/backend/shared/database"
 	configPB "github.com/seidu626/audiobook/backend/shared/proto/config"
@@ -99,19 +99,19 @@ func (c *Container) Delete() error {
 
 func buildLanguageRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&model.Language{})
+	db.AutoMigrate(&models.Language{})
 	return repository.NewLanguageRepository(db), nil
 }
 
 func buildSkillRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&model.Skill{})
+	db.AutoMigrate(&models.Skill{})
 	return repository.NewSkillRepository(db), nil
 }
 
 func buildWordRepository(ctn di.Container) (interface{}, error) {
 	db := ctn.Get("database").(*gorm.DB)
-	db.AutoMigrate(&model.Word{})
+	db.AutoMigrate(&models.Word{})
 	return repository.NewWordRepository(db), nil
 }
 

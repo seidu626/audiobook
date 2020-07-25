@@ -4,7 +4,7 @@ package audiobook.language.language.v1;
 
 option go_package = "github.com/seidu626/audiobook/backend/services/language/proto/language";
 import "google/protobuf/wrappers.proto";
-// import "google/api/annotations.proto";
+import "google/api/annotations.proto";
 import "services/language/proto/entities/entities.proto";
 import "validate/validate.proto";
 
@@ -14,41 +14,41 @@ import "validate/validate.proto";
 // Language Service
 service LanguageService {
   rpc Exist(ExistRequest) returns (ExistResponse) {
-    // option (google.api.http) = {
-    //   get : "/v1/language/{id}"
-    // };
+    option (google.api.http) = {
+      get : "/v1/language/{id}"
+    };
   }
 
   rpc List(ListRequest) returns (ListResponse) {
-    // option (google.api.http) = {
-    //   get : "/v1/language"
-    // };
+    option (google.api.http) = {
+      get : "/v1/language"
+    };
   }
 
   rpc Get(GetRequest) returns (GetResponse) {
-    // option (google.api.http) = {
-    //   get : "/v1/language/{id}"
-    // };
+    option (google.api.http) = {
+      get : "/v1/language/{id}"
+    };
   }
 
   rpc Create(CreateRequest) returns (CreateResponse) {
-    // option (google.api.http) = {
-    //   post : "/v1/language"
-    //   body : "result"
-    // };
+    option (google.api.http) = {
+      post : "/v1/language"
+      body : "*"
+    };
   }
 
   rpc Update(UpdateRequest) returns (UpdateResponse) {
-    // option (google.api.http) = {
-    //   put : "/v1/language"
-    //   body : "result"
-    // };
+    option (google.api.http) = {
+      put : "/v1/language"
+      body : "*"
+    };
   }
 
   rpc Delete(DeleteRequest) returns (DeleteResponse) {
-    // option (google.api.http) = {
-    //   delete : "/v1/langauge/{id}"
-    // };
+    option (google.api.http) = {
+      delete : "/v1/langauge/{id}"
+    };
   }
 }
 
