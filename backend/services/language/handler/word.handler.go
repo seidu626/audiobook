@@ -10,6 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 
+	go_uuid1 "github.com/satori/go.uuid"
 	models "github.com/seidu626/audiobook/backend/services/language/model"
 	wordPB "github.com/seidu626/audiobook/backend/services/language/proto/word"
 	"github.com/seidu626/audiobook/backend/services/language/repository"
@@ -50,7 +51,12 @@ func (h *wordHandler) List(ctx context.Context, req *wordPB.ListRequest, rsp *wo
 	}
 	rsp.Total = total
 
-	rsp.Results = models.UnmarshalWordCollection(words)
+	rsp.Results, err = models.UnmarshalWordCollection(words)
+
+	if err != nil {
+		return errors.NotFound("micro.service.word.word.list", "Error %v", err.Error())
+	}
+
 	return nil
 }
 
@@ -70,7 +76,11 @@ func (h *wordHandler) Get(ctx context.Context, req *wordPB.GetRequest, rsp *word
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 
-	rsp.Result = models.UnmarshalWord(word)
+	rsp.Result, err = models.UnmarshalWord(word)
+
+	if err != nil {
+		return errors.NotFound("micro.service.word.word.Get", "Error %v", err.Error())
+	}
 
 	return nil
 }
@@ -79,6 +89,7 @@ func (h *wordHandler) Create(ctx context.Context, req *wordPB.CreateRequest, rsp
 	log.Info("Received WordHandler.Create request")
 
 	model := models.Word{}
+	model.ID = new(go_uuid1.UUID).String()
 	model.Content = req.Content.GetValue()
 	model.AudioSrc = req.AudioSrc.GetValue()
 

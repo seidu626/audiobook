@@ -50,7 +50,10 @@ func (h *skillHandler) List(ctx context.Context, req *skillPB.ListRequest, rsp *
 	}
 	rsp.Total = total
 
-	rsp.Results = models.UnmarshalSkillCollection(skills)
+	rsp.Results, err = models.UnmarshalSkillCollection(skills)
+	if err != nil {
+		return errors.NotFound("micro.service.skill.skill.list", "Error %v", err.Error())
+	}
 	return nil
 }
 
@@ -70,7 +73,10 @@ func (h *skillHandler) Get(ctx context.Context, req *skillPB.GetRequest, rsp *sk
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 
-	rsp.Result = models.UnmarshalSkill(skill)
+	rsp.Result, err = models.UnmarshalSkill(skill)
+	if err != nil {
+		return errors.NotFound("micro.service.skill.skill.Get", "Error %v", err.Error())
+	}
 
 	return nil
 }

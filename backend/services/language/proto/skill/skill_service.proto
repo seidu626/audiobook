@@ -123,6 +123,7 @@ message CreateRequest {
   google.protobuf.StringValue category = 10;
   int32 index = 11;
   google.protobuf.StringValue language_id = 12;
+  repeated audiobook.language.entities.v1.Word words = 13;
 }
 
 message CreateResponse {
@@ -146,6 +147,7 @@ message UpdateRequest {
   google.protobuf.StringValue category = 10;
   int32 index = 11;
   google.protobuf.StringValue language_id = 12;
+  repeated audiobook.language.entities.v1.Word words = 13;
 }
 
 message UpdateResponse {

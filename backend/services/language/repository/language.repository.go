@@ -12,7 +12,7 @@ import (
 // LanguageRepository interface
 type LanguageRepository interface {
 	Exist(model *models.Language) bool
-	List(limit, page uint32, sort string) (total uint32, languages []*models.Language, err error)
+	List(limit uint32, page uint32, sort string) (total uint32, languages []*models.Language, err error)
 	Get(id string) (*models.Language, error)
 	Create(model *models.Language) error
 	Update(id string, model *models.Language) error
@@ -35,20 +35,14 @@ func NewLanguageRepository(db *gorm.DB) LanguageRepository {
 func (repo *languageRepository) Exist(model *models.Language) bool {
 	log.Infof("Received languageRepository.Exist request %v", *model)
 	var count int
-	if model.Name != "" && len(model.Name) > 0 {
-		repo.db.Model(&models.Language{}).Where("name = ?", model.Name).Count(&count)
+	if (model.Name != "" && len(model.Name) > 0) && model.Abbreviation != "" {
+		repo.db.Model(&models.Language{}).Where(&models.Language{Name: model.Name, Abbreviation: model.Abbreviation}).Count(&count)
 		if count > 0 {
 			return true
 		}
 	}
 	if len(model.ID) > 0 {
 		repo.db.Model(&models.Language{}).Where("id = ?", model.ID).Count(&count)
-		if count > 0 {
-			return true
-		}
-	}
-	if model.Abbreviation != "" {
-		repo.db.Model(&models.Language{}).Where("abbreviation = ?", model.Abbreviation).Count(&count)
 		if count > 0 {
 			return true
 		}

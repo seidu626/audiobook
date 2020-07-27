@@ -110,6 +110,7 @@ message CreateRequest {
       [ (validate.rules).string.min_len = 2 ];
   google.protobuf.StringValue flag_src = 4
       [ (validate.rules).string.min_len = 3 ];
+  repeated audiobook.language.entities.v1.Skill skills = 5;
 }
 
 message CreateResponse {
@@ -126,6 +127,7 @@ message UpdateRequest {
       [ (validate.rules).string.min_len = 2 ];
   google.protobuf.StringValue flag_src = 4
       [ (validate.rules).string.min_len = 3 ];
+  repeated audiobook.language.entities.v1.Skill skills = 5;
 }
 
 message UpdateResponse {

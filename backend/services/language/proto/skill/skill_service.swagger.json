@@ -297,6 +297,12 @@
         },
         "language_id": {
           "type": "string"
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Word"
+          }
         }
       }
     },
@@ -450,6 +456,12 @@
         },
         "language_id": {
           "type": "string"
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Word"
+          }
         }
       }
     },

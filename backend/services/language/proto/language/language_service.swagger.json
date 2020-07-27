@@ -263,6 +263,12 @@
         },
         "flag_src": {
           "type": "string"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Skill"
+          }
         }
       }
     },
@@ -421,6 +427,12 @@
         },
         "flag_src": {
           "type": "string"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Skill"
+          }
         }
       }
     },

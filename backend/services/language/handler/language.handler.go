@@ -51,7 +51,10 @@ func (h *languageHandler) List(ctx context.Context, req *languagePB.ListRequest,
 		return errors.NotFound("micro.service.language.language.list", "Error %v", err.Error())
 	}
 	rsp.Total = total
-	rsp.Results = models.UnmarshalLanguageCollection(languages)
+	rsp.Results, err = models.UnmarshalLanguageCollection(languages)
+	if err != nil {
+		return errors.NotFound("micro.service.language.language.list", "Error %v", err.Error())
+	}
 	return nil
 }
 
@@ -71,7 +74,10 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 
-	rsp.Result = models.UnmarshalLanguage(language)
+	rsp.Result, err = models.UnmarshalLanguage(language)
+	if err != nil {
+		return errors.NotFound("micro.service.language.language.Get", "Error %v", err.Error())
+	}
 
 	return nil
 }
@@ -79,7 +85,8 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
 	log.Info().Msg("Received LanguageHandler.Create request")
 
-	model := models.Language{}
+	model := models.MarshalLanguage{}
+	// model.ID = new(go_uuid1.UUID).String()
 	model.Name = req.Name.GetValue()
 	model.Abbreviation = req.Abbreviation.GetValue()
 	model.FlagSrc = req.FlagSrc.GetValue()

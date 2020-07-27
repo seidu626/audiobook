@@ -607,6 +607,21 @@ func (m *CreateRequest) Validate() error {
 
 	}
 
+	for idx, item := range m.GetSkills() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateRequestValidationError{
+					field:  fmt.Sprintf("Skills[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -771,6 +786,21 @@ func (m *UpdateRequest) Validate() error {
 			return UpdateRequestValidationError{
 				field:  "FlagSrc",
 				reason: "value length must be at least 3 runes",
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetSkills() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateRequestValidationError{
+					field:  fmt.Sprintf("Skills[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
 			}
 		}
 
