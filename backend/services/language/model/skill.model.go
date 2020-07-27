@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 
 	ptypes "github.com/golang/protobuf/ptypes"
@@ -8,6 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes/wrappers"
 	go_uuid1 "github.com/satori/go.uuid"
 	pb "github.com/seidu626/audiobook/backend/services/language/proto/entities"
+	pbReq "github.com/seidu626/audiobook/backend/services/language/proto/skill"
 )
 
 // Skill model
@@ -108,6 +110,42 @@ func UnmarshalSkill(skill *Skill) (*pb.Skill, error) {
 	}
 	if skill.Words != nil {
 		words, err := UnmarshalWordCollection(skill.Words)
+		if err != nil {
+			return to, err
+		}
+		to.Words = words
+	}
+
+	return to, err
+}
+
+// MarshalSkilCreateReqeust convert proto create request to model
+func MarshalSkilCreateReqeust(req *pbReq.CreateRequest) (*Skill, error) {
+	dependencySlice := []string{}
+	if req.Dependencies != nil {
+		for _, dep := range req.Dependencies {
+			rec := dep.GetValue()
+			dependencySlice = append(dependencySlice, rec)
+		}
+	}
+	dependencies := strings.Join(dependencySlice, ",")
+
+	to := &Skill{
+		Title:        req.Title.Value,
+		URLTitle:     req.UrlTitle.Value,
+		LessonNumber: req.LessonNumber,
+		Dependencies: dependencies,
+		Disabled:     req.Disabled,
+		Locked:       req.Locked,
+		Type:         req.Type.GetValue(),
+		Category:     req.Category.GetValue(),
+		Index:        req.Index,
+		Description:  req.Description.GetValue(),
+	}
+	var err error
+
+	if req.Words != nil {
+		words, err := MarshalWordCollection(req.Words)
 		if err != nil {
 			return to, err
 		}

@@ -67,7 +67,7 @@ func (repo *languageRepository) List(limit, page uint32, sort string) (total uin
 		sort = "created_at desc"
 	}
 
-	// enable auto preloading for `Profile`
+	// enable auto preloading for `Skills`
 	if err = db.Set("gorm:auto_preload", true).Order(sort).Limit(limit).Offset(offset).Find(&languages).Count(&total).Error; err != nil {
 		log.WithError(err).Error("Error in LanguageRepository.List")
 		return

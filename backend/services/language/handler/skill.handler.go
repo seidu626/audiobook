@@ -88,26 +88,14 @@ func (h *skillHandler) Create(ctx context.Context, req *skillPB.CreateRequest, r
 		rec := dep.GetValue()
 		dependencySlice = append(dependencySlice, rec)
 	}
-	dependencies := strings.Join(dependencySlice, ",")
-	skillType := req.Type.GetValue()
-	category := req.Category.GetValue()
-	description := req.Description.GetValue()
-	languageID := uuid.FromStringOrNil(req.LanguageId.GetValue()).String()
+	//languageID := uuid.FromStringOrNil(req.LanguageId.GetValue()).String()
 
-	model := models.Skill{}
-	model.Title = req.Title.GetValue()
-	model.URLTitle = req.UrlTitle.GetValue()
-	model.LessonNumber = req.LessonNumber
-	model.Dependencies = dependencies
-	model.Disabled = req.Disabled
-	model.Locked = req.Locked
-	model.Type = skillType
-	model.Category = category
-	model.Index = int32(req.Index)
-	model.Description = description
-	model.LanguageID = languageID
+	model, err := models.MarshalSkilCreateReqeust(req)
+	if err != nil {
+		log.Error("Received SkillHandler.Create request", "Error %v", err.Error())
+	}
 
-	if err := h.skillRepository.Create(&model); err != nil {
+	if err := h.skillRepository.Create(model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 

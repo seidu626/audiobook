@@ -85,13 +85,12 @@ func (h *languageHandler) Get(ctx context.Context, req *languagePB.GetRequest, r
 func (h *languageHandler) Create(ctx context.Context, req *languagePB.CreateRequest, rsp *languagePB.CreateResponse) error {
 	log.Info().Msg("Received LanguageHandler.Create request")
 
-	model := models.MarshalLanguage{}
-	// model.ID = new(go_uuid1.UUID).String()
-	model.Name = req.Name.GetValue()
-	model.Abbreviation = req.Abbreviation.GetValue()
-	model.FlagSrc = req.FlagSrc.GetValue()
+	model, err := models.MarshalLanguageCreateReqeust(req)
+	if err != nil {
+		log.Error().Msgf("Received LanguageHandler.Create request", "Error %v", err.Error())
+	}
 
-	if err := h.languageRepository.Create(&model); err != nil {
+	if err := h.languageRepository.Create(model); err != nil {
 		return myErrors.AppError(myErrors.DBE, err)
 	}
 

@@ -19,7 +19,7 @@ type Language struct {
 	Name         string     `gorm:"size:100;not null" json:"name"`
 	Abbreviation string     `gorm:"size:100;" json:"abbreviation"`
 	FlagSrc      string     `json:"flagSrc"`
-	Skills       []*Skill   `gorm:"foreignkey:LanguageID;association_foreignkey:ID;preload:true" json:"skills"`
+	Skills       []*Skill   `gorm:"foreignkey:LanguageID;preload:true" json:"skills"`
 }
 
 // Languages language collection
@@ -104,7 +104,8 @@ func UnmarshalLanguage(language *Language) (*pb.Language, error) {
 	return to, err
 }
 
-func (req *pbReq.CreateRequest) MarshalLanguage() (*Language, error) {
+// MarshalLanguageCreateReqeust convert proto create request to model
+func MarshalLanguageCreateReqeust(req *pbReq.CreateRequest) (*Language, error) {
 	to := &Language{
 		Name:         req.Name.Value,
 		Abbreviation: req.Abbreviation.Value,
@@ -124,7 +125,7 @@ func (req *pbReq.CreateRequest) MarshalLanguage() (*Language, error) {
 }
 
 // MarshalLanguage convert proto to model
-func (language *pb.Language) MarshalLanguage() (*Language, error) {
+func MarshalLanguage(language *pb.Language) (*Language, error) {
 	to := &Language{
 		ID:           language.Id,
 		Name:         language.Name,
