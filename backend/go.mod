@@ -9,7 +9,7 @@ replace github.com/coreos/go-systemd => github.com/coreos/go-systemd/v22 v22.0.0
 require (
 	github.com/envoyproxy/protoc-gen-validate v0.4.0
 	github.com/getsentry/sentry-go v0.7.0
-	github.com/gogo/protobuf v1.3.1
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.14.5 // indirect
@@ -24,9 +24,6 @@ require (
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
 	github.com/xmlking/configor v0.2.1
-	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
-	golang.org/x/sys v0.0.0-20200724161237-0e2f3a69832c // indirect
-	golang.org/x/text v0.3.3 // indirect
 	google.golang.org/genproto v0.0.0-20191216164720-4f79533eabd1
 	google.golang.org/protobuf v1.23.0
 )
